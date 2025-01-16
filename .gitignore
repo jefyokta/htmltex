@@ -175,3 +175,4 @@ dist
 .DS_Store
 test.jpg 
 index.html
+.vscode/
