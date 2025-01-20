@@ -25,7 +25,17 @@ const LatexConverter: ConverterMap = {
     li: (_, content) => `\\item ${content}`,
     img: (attrs) =>{      
     return  `\\includegraphics[width=${attrs.width || "0.5\\textwidth"}]{${attrs.src}}`},
-    a: (attrs, content) => `\\href{${attrs.href}}{${content}}`,
+    a: (attrs, content) =>{ 
+      if (attrs.cite) {
+        if (attrs.cite === "normal") {
+          return `\\cite{${attrs.citeId}}`
+        }
+        return `\\citeA{${attrs.citeId}}`
+
+        
+      }
+      return`\\href{${attrs.href}}{${content}}`}
+      ,
     hr: () => `\\noindent\\rule{\\textwidth}{0.4pt}`,
     blockquote: (_, content) => `\\begin{quote}${content}\\end{quote}`,
     code: (_, content) => `\\texttt{${content}}`,
@@ -35,11 +45,26 @@ const LatexConverter: ConverterMap = {
     small: (_, content) => `\\footnotesize{${content}}`,
     strong: (_, content) => `\\textbf{${content}}`,
     figcaption:(_,content)=>`\\caption{${content}}`,
+    table: (attrs, content) => `\\begin{tabular}{${ attrs.records }}\n\\hline\n${content}\\end{tabular}\n\\vspace{1em}`,
+    tr: (attrs, content) => {
+       return `${content} \\\\\n\\hline`
+      },
+    td: (attrs, content) => {
+      let options = "";
+      if (attrs.colspan) options += `\\multicolumn{${attrs.colspan}}{c}{${content}}`;
+      if (attrs.rowspan) options += `\\multirow{${attrs.rowspan}}{*}{${content}}`;
+      return options || `${content} &`;
+    },
+    th: (attrs, content) => {
+      let options = "";
+      if (attrs.colspan) options += `\\multicolumn{${attrs.colspan}}{c}{\\textbf{${content}}}`;
+      if (attrs.rowspan) options += `\\multirow{${attrs.rowspan}}{*}{\\textbf{${content}}}`;
+      return options || `\\textbf{${content}} &`;
+    },    
     figure:(attrs,content)=>{
      const alignment = attrs?.style?.match(/text-align:\s*([^;]+)/)
      if (alignment) {
       if (alignment[0] == 'center') {
-
         return `
         \\begin{figure}
         \\centering${content}
@@ -69,7 +94,12 @@ const LatexConverter: ConverterMap = {
     }
   },
   texToHtml: {
-    cite: (attrs:any, content:any) => `<a href="#${content}" style="color:black;text-decoration:none" >${content}</a>`,
+    cite: (attrs:any, content:any) => {
+    return  `<a href="#" cite="normal" citeId="${content}" style="color:black;text-decoration:none" >${content}</a>`
+    },
+    citeA:(attrs:any, content:any) => {
+      return  `<a href="#" cite="a" citeId="${content}" style="color:black;text-decoration:none" >${content}</a>`
+      },
     chapter: ({content}:any) => `<h1>${content}</h1>`,
     section: ({content}:any) => `<h2 style="counter-reset: subsection;font-size: 1.4rem;font-weight: bold;margin-top: 3.5ex;margin-bottom: 2.3ex;" >${content}</h2>`,
     subsection: ({content}:any) => `<h3>${content}</h3>`,
@@ -79,9 +109,7 @@ const LatexConverter: ConverterMap = {
     textbf: ({content}:TexAttribute) => `<b>${content}</b>`,
     textit: ({content}:TexAttribute) => `<i>${content}</i>`,
     underline: ({content}:TexAttribute) => `<u>${content}</u>`,
-    par: (data:any,content:any,text:any) => {
-    return  `<p>${text}</p>`
-  },
+    par: (data:any,content:any,text:any) =>  `<p>${text}</p>`,
     textcolor: (attrs:any, content:string) =>
       `<span style="color:${attrs[1]}">${content}</span>`,
     begin_itemize: () => `<ul>`,

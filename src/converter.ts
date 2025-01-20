@@ -9,7 +9,6 @@ export const convertHtmlToLatex = (html: string): string => {
       if (e) throw e
     });
     const parser = new Parser(handler);
-  
     parser.write(html);
     parser.end();
   
@@ -51,8 +50,15 @@ export const convertHtmlToLatex = (html: string): string => {
   export const convertLatexToHtml = (latex: string): string => {
     const latexPattern = /\\([a-z]+)(?:\{([^}]*)\}| ?(.+))?/g;
     const figurePattern = /\\begin\{figure\}[\s\S]*?\\end\{figure\}/g;
+    const tablePattern = /\\begin\{tabular\}{\{.*?\}}\\n\\hline[\s\S]*?\\end\{tabular\}/g
   
     return latex
+      .replace(tablePattern,(match,content)=>{
+        const records = match[1]
+            return `<table record="${records}">
+                        ${content}
+            </table`
+        })
       .replace(figurePattern, (match) => {
         const figureContent = match.match(/\\includegraphics\[(.*?)\]\{(.*?)\}/);
         const caption = match.match(/\\caption\{(.*?)\}/);
@@ -81,7 +87,8 @@ export const convertHtmlToLatex = (html: string): string => {
   
           return converter(attrs, content || "", text || "");
         }
-          return `<div class="latex-unknown" tex="${match}">[Unrecognized: ${match}]</div>`;
+  
+        return `<div class="latex-unknown" tex="${match}">[Unrecognized: ${match}]</div>`;
       });
   };
   

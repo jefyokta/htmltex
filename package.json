@@ -7,6 +7,9 @@
     "name": "Jefy Oktamipa",
     "email": "jefyokta50@gmail.com"
   },
+  "scripts": {
+    "build":"bun build ./index.ts --outfile=index.js "
+  },
   "module": "index.ts",
   "type": "module",
   "devDependencies": {

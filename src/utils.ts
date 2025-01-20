@@ -11,5 +11,13 @@ const escapeLatex = (text: string): string => {
         .replace(/~/g, '\\textasciitilde ')
         .replace(/\^/g, '\\textasciicircum ');
  }
+export function generateUniqueId() {
+    return Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
+}
+
+export const indexDb = () =>{
+
+    const request = indexedDB.open('citations')
+}
 
 export default escapeLatex;
