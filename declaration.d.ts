@@ -21,12 +21,7 @@ type TexAttribute = {
     [...keys:any]
 }
 
-type cite = {
-    ref:string,
-    authors:string,
-    title:string,
-    years:string
-}
+
 
 type TexToHtmlParams = (attrs?:TexAttribute, content?:any, text?:any)=>string
 type Cite = {

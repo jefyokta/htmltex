@@ -95,10 +95,10 @@ const LatexConverter: ConverterMap = {
   },
   texToHtml: {
     cite: (attrs:any, content:any) => {
-    return  `<a href="#" cite="normal" citeId="${content}" style="color:black;text-decoration:none" >${content}</a>`
+    return  `<a href="#" class="cite" cite="normal" citeId="${content}" style="color:black;text-decoration:none" ></a>`
     },
     citeA:(attrs:any, content:any) => {
-      return  `<a href="#" cite="a" citeId="${content}" style="color:black;text-decoration:none" >${content}</a>`
+      return  `<a href="#" class="citeA" cite="a" citeId="${content}" style="color:black;text-decoration:none" ></a>`
       },
     chapter: ({content}:any) => `<h1>${content}</h1>`,
     section: ({content}:any) => `<h2 style="counter-reset: subsection;font-size: 1.4rem;font-weight: bold;margin-top: 3.5ex;margin-bottom: 2.3ex;" >${content}</h2>`,

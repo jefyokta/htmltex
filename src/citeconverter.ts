@@ -29,7 +29,6 @@ export const objectToBib = (cite: Cite[]): string => {
     const fieldData = Object.fromEntries(
         fieldMatches.map(([_, key, value]) => [key.trim(), value.trim()])
       );
-      console.log(typeof fieldData);
       
   
       return { id:id, type:type, data: fieldData|| {} };

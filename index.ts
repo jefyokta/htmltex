@@ -2,12 +2,13 @@ import { Parser } from "htmlparser2";
 import { LabeledImage } from "./src/components/image";
 import { convertHtmlToLatex } from "./src/converter";
 import { convertLatexToHtml } from "./src/converter";
+import { bibToObject, objectToBib } from "./src/citeconverter";
 
 
-const el = document.getElementById('page')
-if (el) {
-  el.innerHTML = LabeledImage({src:"test.jpg",caption:"Gambar",centered:true})
-}
+// const el = document.getElementById('page')
+// if (el) {
+//   el.innerHTML = LabeledImage({src:"test.jpg",caption:"Gambar",centered:true})
+// }
 const changeWith =(node:Node)=>{
 
   const selection = window.getSelection()
@@ -23,33 +24,28 @@ const changeWith =(node:Node)=>{
   }
 
 }
-/**
- * Mengganti elemen baris tempat kursor berada dengan elemen baru.
- * @param newTagName - Nama tag baru yang akan menggantikan elemen lama (contoh: 'h1').
- * @param mutating - Callback untuk memodifikasi elemen baru sebelum menggantikan elemen lama.
- */
-const changeLineTag = (newTagName: string, mutating: (newElement: HTMLElement) => void) => {
-  const selection = window.getSelection();
 
-  if (selection && selection.anchorNode) {
-    const anchorNode = selection.anchorNode;
-    const lineElement = anchorNode.nodeType === 3 ? anchorNode.parentNode : anchorNode;
 
-    if (lineElement instanceof HTMLElement) {
-      const newElement = document.createElement(newTagName);
+const obj = bibToObject(
+  `@article{poley2000latex,
+  title={Latex allergy},
+  author={Poley Jr, Gerald E and Slater, Jay E},
+  journal={Journal of allergy and clinical immunology},
+  volume={105},
+  number={6},
+  pages={1054--1062},
+  year={2000},
+  publisher={Elsevier}
 
-      if (lineElement.tagName === newElement.tagName) {
-        lineElement.replaceWith('p')
-        return
-      }
+  @book{butti2023high,
+  title={High Performance with Laravel Octane: Learn to fine-tune and optimize PHP and Laravel apps using Octane and an asynchronous approach},
+  author={Butti, Roberto},
+  year={2023},
+  publisher={Packt Publishing Ltd}
+}
+}`
+);
 
-      newElement.innerHTML = lineElement.innerHTML;
+const bib = objectToBib(obj)
 
-      mutating(newElement);
-
-      lineElement.replaceWith(newElement);
-
-      console.log(`Elemen lama diganti dengan: <${newTagName}>`);
-    }
-  }
-};
+console.log(obj,bib);
