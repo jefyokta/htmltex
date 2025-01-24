@@ -21,20 +21,47 @@ var table = ({
 }) => {
   const styles = parseFieldPattern(fieldpattern);
   const colgroup = styles.map((style) => `<col style="${style}">`).join("");
-  const tableRows = rows.map((row) => `<tr>${row.map(({ content, colspan, rowspan }) => `<td contenteditable ${colspan ? ` colspan="${colspan}"` : ""}${rowspan ? ` rowspan="${rowspan}"` : ""}>${content}</td>`).join("")}</tr>`).join("");
+  const tableRows = rows.map((row) => `<tr>${row.map(({ content, colspan, rowspan }) => `<td${colspan ? ` colspan="${colspan}"` : ""}${rowspan ? ` rowspan="${rowspan}"` : ""}>${content}</td>`).join("")}</tr>`).join("");
   return `
       <table border="${border}">
         ${caption ? `<caption>${caption}</caption>` : ""}
         <colgroup>
           ${colgroup}
         </colgroup>
-       
+        <tbody>
+          ${tableRows}
+        </tbody>
       </table>
     `;
 };
+var tableHTML = table({
+  caption: "Example Table",
+  fieldpattern: "c|l|r",
+  rows: [
+    [
+      { content: "Header 1" },
+      { content: "Header 2" },
+      { content: "Header 3" }
+    ],
+    [
+      { content: "Row 1, Col 1" },
+      { content: "Row 1, Col 2", colspan: 2 }
+    ],
+    [
+      { content: "Row 2, Col 1", rowspan: 2 },
+      { content: "Row 2, Col 2" },
+      { content: "Row 2, Col 3" }
+    ],
+    [
+      { content: "Row 3, Col 2" },
+      { content: "Row 3, Col 3" }
+    ]
+  ],
+  border: 2
+});
 
 // table.ts
-var tableHTML = table({
+var tableHTML2 = table({
   caption: "Example Table",
   fieldpattern: "l|l|l",
   rows: [
@@ -59,4 +86,4 @@ var tableHTML = table({
   ],
   border: 2
 });
-document.body.innerHTML = tableHTML;
+document.body.innerHTML = tableHTML2;

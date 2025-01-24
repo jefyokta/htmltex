@@ -23,7 +23,7 @@ type TableCell = {
         case "r":
           return "text-align: right;";
         default:
-          return `width:${char}`;
+          return char;
       }
     });
   };
@@ -45,7 +45,7 @@ type TableCell = {
         `<tr>${row
           .map(
             ({ content, colspan, rowspan }) =>
-              `<td contenteditable ${colspan ? ` colspan="${colspan}"` : ""}${
+              `<td${colspan ? ` colspan="${colspan}"` : ""}${
                 rowspan ? ` rowspan="${rowspan}"` : ""
               }>${content}</td>`
           )
@@ -59,9 +59,34 @@ type TableCell = {
         <colgroup>
           ${colgroup}
         </colgroup>
+        <tbody>
           ${tableRows}
+        </tbody>
       </table>
     `;
   };
-
-  
+  const tableHTML = table({
+    caption: "Example Table",
+    fieldpattern: "c|l|r", 
+    rows: [
+      [
+        { content: "Header 1" },
+        { content: "Header 2" },
+        { content: "Header 3" },
+      ],
+      [
+        { content: "Row 1, Col 1" },
+        { content: "Row 1, Col 2", colspan: 2 },
+      ],
+      [
+        { content: "Row 2, Col 1", rowspan: 2 },
+        { content: "Row 2, Col 2" },
+        { content: "Row 2, Col 3" },
+      ],
+      [
+        { content: "Row 3, Col 2" },
+        { content: "Row 3, Col 3" },
+      ],
+    ],
+    border: 2,
+  });  

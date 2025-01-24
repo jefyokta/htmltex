@@ -117,8 +117,7 @@ const LatexConverter: ConverterMap = {
     begin_enumerate: () => `<ol>`,
     end_enumerate: () => `</ol>`,
     item: (attrs:TexAttribute,content:any,text:any) =>   `<li>${text}</li>`,
-    includegraphics: (attrs:any) =>
-      `<img src="${attrs[1]}" style="width:${attrs[2] || "50%"}" />`,
+    includegraphics: (attrs:any) =>`<img src="${attrs[1]}" style="width:${attrs[2] || "50%"}" />`,
     href: (attrs:any, content:any) => `<a href="${attrs[1]}">${content}</a>`,
     rule: () => `<hr />`,
     quote: (content:any) => `<blockquote>${content}</blockquote>`,
@@ -127,7 +126,7 @@ const LatexConverter: ConverterMap = {
     sup: (content:any) => `<sup>${content}</sup>`,
     sub: (content:any) => `<sub>${content}</sub>`,
     footnotesize: (content:any) => `<small>${content}</small>`,
-    begin:({content}:any)=> {
+    begin:({attr,content}:any)=> {
       if (content == 'itemize') {
         return LatexConverter.texToHtml.begin_itemize()
       }
@@ -162,6 +161,8 @@ const getColor = (style: string): string => {
   const match = style.match(/color:\s*([^;]+)/);
   return match ? match[1] : "black";
 };
+
+
 
 
 
