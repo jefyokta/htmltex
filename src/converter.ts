@@ -85,7 +85,7 @@ export const convertHtmlToLatex = (html: string): string => {
             href: content || "",
             content: content || "",
           };
-          console.log(f);
+          // console.log(f);
           
   
           return converter(attrs, content || "", text || "");

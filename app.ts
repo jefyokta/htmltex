@@ -6,6 +6,7 @@ import Document from "@tiptap/extension-document";
 import Text from "@tiptap/extension-text";
 import { convertHtmlToLatex } from "./src/converter";
 import { LabeledImage } from "./src/tiptapextensions/image";
+import { Save } from "./src/actions/save";
 
 
 
@@ -18,5 +19,13 @@ const editor = new Editor({
     content:htmlToTex,
     editable: true,
 })
+
+const compile = ()=>{
+    const html = editor.getHTML();
+    const latex = convertHtmlToLatex(html);
+    console.log(latex)
+}
+
+compile();;
 
 
