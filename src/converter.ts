@@ -1,6 +1,7 @@
 import { Parser } from "htmlparser2";
 import { DomHandler, Element, Text, Node } from "domhandler";
 import { LatexConverter } from "./htmltex";
+import { CenteredLabeledImage } from "./utils";
 
 
 
@@ -69,7 +70,7 @@ export const convertHtmlToLatex = (html: string): string => {
         const imgSrc = figureContent ? figureContent[2] : ""; 
         const imgAlt = caption ? caption[1] : "Figure"; 
         
-        return `<figure ${centered ? 'style="text-align: center;"' : ""} ${label ?`id="${label[1]}"` : ""}>
+        return `<figure ${centered ? CenteredLabeledImage : ""} ${label ?`id="${label[1]}"` : ""}>
             <img src="${imgSrc}"  ${imgWidth ? `style="${imgWidth};"` : ""} />
             ${caption ? `<figcaption>${imgAlt}</figcaption>` : ""}
           </figure>

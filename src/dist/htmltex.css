@@ -1,33 +1,66 @@
-h1{
-    font-size: 2rem;
-    font-weight: 700;
-    /* margin-bottom: 1rem; */
-    text-align: center;
+body {
+    counter-reset: h1-counter;
   }
 
-  h2{
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    counter-reset: h2-counter;
+    counter-increment: h1-counter;
+  }
+  
+  h1::before {
+    content: "BAB " counter(h1-counter) "\A" ;
+    font-weight: bold;
+  }
+
+  h2 {
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 1rem;
+    display: list-item;
+    list-style: none;
+    counter-increment: h2-counter;
+    counter-reset: h3-counter;
   }
-  h3{
+  
+  h2::before {
+    content: counter(h1-counter) "." counter(h2-counter) " ";
+    font-weight: bold;
+  }
+
+  h3 {
     font-size: 1.25rem;
     font-weight: 600;
     margin-bottom: 1rem;
+    display: list-item;
+    list-style: none;
+    counter-increment: h3-counter;
   }
-  p{
-    word-break: break-all;
+  
+  h3::before {
+    content: counter(h1-counter) "." counter(h2-counter) "." counter(h3-counter) " ";
+    font-weight: bold;
+  }
+
+  p {
+    word-break: break-word;
     text-indent: 2.5em;
   }
+  
   li p {
     text-indent: 0;
   }
- .page ol{
+  
+  .page ol {
     list-style-type: decimal;
   }
- .page ul{
-    list-style: bullet;
+
+  .page ul {
+    list-style-type: disc;
   }
-  .page ul,ol{
+
+  .page ul, ol {
     margin-left: 2.5em;
   }

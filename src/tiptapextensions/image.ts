@@ -1,7 +1,7 @@
-import { Node, mergeAttributes } from '@tiptap/core';
-import { generateUniqueId } from '../utils';  
+import { Node, mergeAttributes} from '@tiptap/core';
+import { CenteredLabeledImage, generateUniqueId } from '../utils';
 
-export const LabeledImage = Node.create({
+export const LabeledImage = Node.create<ImageOptions>({
   name: 'labeledImage',
 
   group: 'block',
@@ -29,6 +29,17 @@ export const LabeledImage = Node.create({
       },
     };
   },
+  addOptions:()=>{
+    return {
+        src:"",
+        width:'200px',
+        caption:"",
+        centered:true,
+        cite:''
+
+    }
+
+  },
 
   parseHTML() {
     return [
@@ -39,12 +50,12 @@ export const LabeledImage = Node.create({
   },
 
   renderHTML({ node, HTMLAttributes }) {
-    const label = generateUniqueId();  // Generate unique ID for the figure
+    const label = generateUniqueId(); 
     const { src, width, caption, centered, cite } = node.attrs;
 
     return [
       'figure',
-      mergeAttributes(HTMLAttributes, { id: label, style: centered ? 'text-align:center' : '' }),
+      mergeAttributes(HTMLAttributes, { id: label, style: centered ? CenteredLabeledImage: '' }),
       [
         'img',
         {
@@ -54,23 +65,32 @@ export const LabeledImage = Node.create({
       ],
       [
         'figcaption',
-        cite
-          ? `<a href="${cite}">${caption}</a>`
-          : caption,
+        {
+            content:`${caption}${cite ? cite : ""}`,
+        }
       ],
     ];
   },
 
-//   addCommands() {
-//     return {
-//       setLabeledImage:
-//         (options:ImageOptions) =>
-//         ({ commands }:any) => {
-//           return commands.insertContent({
-//             type: this.name,
-//             attrs: options,
-//           });
-//         },
-//     };
-//   },
+addCommands(): Partial<any> {
+    return {
+      insertLabeledImage: 
+      (attrs: { src: string, width: string, caption: string, centered: boolean, cite: string }) => ({ commands }:any) => {
+        return commands.insertContent({
+          type: this.name,
+          attrs,
+          content: [{ type: 'text', text: attrs.caption }],
+        });
+      },
+      
+      setLabeledImage: 
+      (attrs: { src: string, width: string, caption: string, centered: boolean, cite: string }) => ({ commands }:any) => {
+        return commands.setNodeMarkup(this.name, attrs);
+      },
+
+      deleteLabeledImage: () => ({ commands }:any) => {
+        return commands.deleteNode();
+      },
+    };
+  },
 });
