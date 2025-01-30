@@ -1,20 +1,5 @@
-import { generateUniqueId } from "../utils"
-
 import { Node, mergeAttributes } from '@tiptap/core';
-
-
-
-
-export const MyLabeledImage= (options:ImageOptions) =>{
-
-    const label  =  generateUniqueId();
-
-    return `<figure ${options.centered ?'style="text-align:center"':""} id="${label}">
-         <image src="${options.src}" style="width:${options.width || '200px'}">
-         <figcaption>${options.cite ? `<a href="${options.cite}"></a>` : options.caption}</figcaption>
-    </figure>`
-
-}
+import { generateUniqueId } from '../utils';  
 
 export const LabeledImage = Node.create({
   name: 'labeledImage',
@@ -54,7 +39,7 @@ export const LabeledImage = Node.create({
   },
 
   renderHTML({ node, HTMLAttributes }) {
-    const label = generateUniqueId();  
+    const label = generateUniqueId();  // Generate unique ID for the figure
     const { src, width, caption, centered, cite } = node.attrs;
 
     return [
@@ -76,16 +61,16 @@ export const LabeledImage = Node.create({
     ];
   },
 
-  addCommands() {
-    return {
-      setLabeledImage:
-        (options:any) =>
-        ({ commands }:any) => {
-          return commands.insertContent({
-            type: this.name,
-            attrs: options,
-          });
-        },
-    };
-  },
+//   addCommands() {
+//     return {
+//       setLabeledImage:
+//         (options:ImageOptions) =>
+//         ({ commands }:any) => {
+//           return commands.insertContent({
+//             type: this.name,
+//             attrs: options,
+//           });
+//         },
+//     };
+//   },
 });

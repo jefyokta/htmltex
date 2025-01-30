@@ -1,0 +1,33 @@
+h1{
+    font-size: 2rem;
+    font-weight: 700;
+    /* margin-bottom: 1rem; */
+    text-align: center;
+  }
+
+  h2{
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  h3{
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  p{
+    word-break: break-all;
+    text-indent: 2.5em;
+  }
+  li p {
+    text-indent: 0;
+  }
+ .page ol{
+    list-style-type: decimal;
+  }
+ .page ul{
+    list-style: bullet;
+  }
+  .page ul,ol{
+    margin-left: 2.5em;
+  }

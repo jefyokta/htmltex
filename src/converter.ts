@@ -75,7 +75,7 @@ export const convertHtmlToLatex = (html: string): string => {
           </figure>
         `;
       })
-      .replace(latexPattern, (match, command, content, text) => {
+      .replaceAll(latexPattern, (match, command, content, text,...f) => {
         const converter = LatexConverter.texToHtml[command];
         if (converter) {
           const attrs = {
@@ -84,6 +84,8 @@ export const convertHtmlToLatex = (html: string): string => {
             href: content || "",
             content: content || "",
           };
+          console.log(f);
+          
   
           return converter(attrs, content || "", text || "");
         }

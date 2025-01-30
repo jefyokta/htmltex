@@ -8,7 +8,7 @@
     "email": "jefyokta50@gmail.com"
   },
   "scripts": {
-    "build":"bun build ./index.ts --outfile=index.js "
+    "build": "bun build ./app.ts --outfile=index.js "
   },
   "module": "index.ts",
   "type": "module",
@@ -20,6 +20,11 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@tiptap/core": "^2.11.3",
+    "@tiptap/extension-document": "^2.11.3",
+    "@tiptap/extension-paragraph": "^2.11.3",
+    "@tiptap/extension-text": "^2.11.3",
+    "@tiptap/starter-kit": "^2.11.3",
     "htmlparser2": "^10.0.0"
   }
 }

@@ -1,25 +1,25 @@
    
 export const citeA = (cite:Cite)=>{
-        return `<a cite="a" citeId="${cite.id}>${cite.data?.author} (${cite.data?.year})</a>`
+        return `<a cite="a" citeId="${cite.id}">${formatAuthorName(cite.data?.author)} (${cite.data?.year})</a>`
 }
 
 export const cite = (cite:Cite) =>{
-    return `<a cite="normal" citeId="${cite.id}">(${cite.data?.author}, ${cite.data?.year})</a>`
+    return `<a cite="normal" citeId="${cite.id}">(${formatAuthorName(cite.data?.author)}, ${cite.data?.year})</a>`
 
 }
 
-export const formatAuthorName = (names:string)=>{
+export const formatAuthorName = (names: string) => {
+    if (!names) return "";
 
-    if (names.includes(' and ')) {
-        const arrnames = names.split(' and ')
-        let result = ''
+    const nameArray = names.split(" and ");
 
-        arrnames.map(n=>{
-            result += n +','
-        })
-        return result
-        
+    if (nameArray.length > 5) {
+        return nameArray.slice(0, 5).join(", ") + " dkk.";
     }
-    return names
 
-}
+    if (nameArray.length > 1) {
+        return nameArray.slice(0, -1).join(", ") + " dan " + nameArray[nameArray.length - 1];
+    }
+
+    return names;
+};

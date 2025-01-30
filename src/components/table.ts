@@ -23,10 +23,16 @@ type TableCell = {
         case "r":
           return "text-align: right;";
         default:
-          return char;
+          return `width:${char};`;
       }
     });
   };
+
+  type NormalTable = {
+    rows:number
+    cols:number,
+    type:'tabular'|'longtable'
+  }
   
   export const table = ({
     caption,
@@ -88,5 +94,27 @@ type TableCell = {
         { content: "Row 3, Col 3" },
       ],
     ],
-    border: 2,
+    border: 1,
   });  
+
+
+
+  export  const simplelTable = (opt:NormalTable)=>{
+    const  {rows , cols,type} = opt
+    let el = ''
+    let col = ''
+    for (let i = 0; i < cols; i++) {
+    col += '<td contenteditable style="text-align:left;max-width:200px;width:200px;;"></td>'
+        
+    }
+    for (let index = 0; index < rows; index++) {
+        el += `
+        <tr>
+        ${col}
+        </tr>`;
+        
+    }
+    return `<table type="${type}" border="1" style="text-align:left">
+    ${el}
+    </table>`
+  }

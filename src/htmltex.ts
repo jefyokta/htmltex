@@ -1,5 +1,5 @@
-import { Parser } from "htmlparser2";
-import { DomHandler, Element, Text, Node } from "domhandler";
+
+import { convertLatexToHtml } from "./converter";
 
 
 
@@ -100,8 +100,8 @@ const LatexConverter: ConverterMap = {
     citeA:(attrs:any, content:any) => {
       return  `<a href="#" class="citeA" cite="a" citeId="${content}" style="color:black;text-decoration:none" ></a>`
       },
-    chapter: ({content}:any) => `<h1>${content}</h1>`,
-    section: ({content}:any) => `<h2 style="counter-reset: subsection;font-size: 1.4rem;font-weight: bold;margin-top: 3.5ex;margin-bottom: 2.3ex;" >${content}</h2>`,
+    chapter: ({content}:any) => `<h1 >${content}</h1>`,
+    section: ({content}:any) => `<h2 >${content}</h2>`,
     subsection: ({content}:any) => `<h3>${content}</h3>`,
     subsubsection: ({content}:any) => `<h4>${content}</h4>`,
     paragraph: ({content}:any) => `<h5>${content}</h5>`,
@@ -116,7 +116,7 @@ const LatexConverter: ConverterMap = {
     end_itemize: () => `</ul>`,
     begin_enumerate: () => `<ol>`,
     end_enumerate: () => `</ol>`,
-    item: (attrs:TexAttribute,content:any,text:any) =>   `<li>${text}</li>`,
+    item: (attrs:TexAttribute,content:any,text:any) =>   `<li>${convertLatexToHtml(text)}</li>`,
     includegraphics: (attrs:any) =>`<img src="${attrs[1]}" style="width:${attrs[2] || "50%"}" />`,
     href: (attrs:any, content:any) => `<a href="${attrs[1]}">${content}</a>`,
     rule: () => `<hr />`,
@@ -126,7 +126,11 @@ const LatexConverter: ConverterMap = {
     sup: (content:any) => `<sup>${content}</sup>`,
     sub: (content:any) => `<sub>${content}</sub>`,
     footnotesize: (content:any) => `<small>${content}</small>`,
-    begin:({attr,content}:any)=> {
+    begin:(opt:any)=> {
+      // console.log(opt);
+      
+      const {content} = opt
+      
       if (content == 'itemize') {
         return LatexConverter.texToHtml.begin_itemize()
       }

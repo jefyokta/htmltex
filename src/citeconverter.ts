@@ -17,7 +17,7 @@ export const objectToBib = (cite: Cite[]): string => {
     const matches = [...bibContent.matchAll(entryRegex)];
   
     if (matches.length === 0) {
-      console.error("No matches found. Check your regex or input format.");
+      console.error("No matches found");
       return [];
     }
     return matches.map((match) => {

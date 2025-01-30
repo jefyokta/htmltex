@@ -57,33 +57,26 @@ var tableHTML = table({
       { content: "Row 3, Col 3" }
     ]
   ],
-  border: 2
+  border: 1
 });
+var normalTable = (opt) => {
+  const { rows, cols, type } = opt;
+  let el = "";
+  let col = "";
+  for (let i = 0;i < cols; i++) {
+    col += '<td contenteditable style="text-align:left;max-width:200px;width:200px;;"></td>';
+  }
+  for (let index = 0;index < rows; index++) {
+    el += `
+        <tr>
+        ${col}
+        </tr>`;
+  }
+  return `<table type="${type}" border="1" style="text-align:left">
+    ${el}
+    </table>`;
+};
 
 // table.ts
-var tableHTML2 = table({
-  caption: "Example Table",
-  fieldpattern: "l|l|l",
-  rows: [
-    [
-      { content: "Header 1" },
-      { content: "Header 2" },
-      { content: "Header 3" }
-    ],
-    [
-      { content: "Row 1, Col 1" },
-      { content: "Row 1, Col 2", colspan: 2 }
-    ],
-    [
-      { content: "Row 2, Col 1", rowspan: 2 },
-      { content: "Row 2, Col 2" },
-      { content: "Row 2, Col 3" }
-    ],
-    [
-      { content: "Row 3, Col 2" },
-      { content: "Row 3, Col 3" }
-    ]
-  ],
-  border: 2
-});
-document.body.innerHTML = tableHTML2;
+var table3 = normalTable({ rows: 9, cols: 5, type: "longtable" });
+document.body.innerHTML = table3;
