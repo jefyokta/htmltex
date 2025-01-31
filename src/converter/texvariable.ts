@@ -1,32 +1,42 @@
 
 
 export default class LatexVariable {
-    private variables:Record<string,string>;
-    constructor(variables:string){
-        this.variables = this.#getLatexVariable(variables)
-    }
-    get(key:string){
-        return this.variables[key]
-    }
-    getAll(){
-        return this.variables
-    }
-    #getLatexVariable = (variables: string) => {
-        const pattern = /\\var{([\w]+)}{([^{}]+)}/g;
+    private static variables: Record<string, string> = {}; 
+ 
+    static get(key: string) {
+        console.log(key);
         
+        return LatexVariable.variables[`\\${key}`] || null; 
+    }
+ 
+    static getAll() {
+        return { ...LatexVariable.variables }; 
+    }
+ 
+    static set(key: string, value: string) {
+
+        LatexVariable.variables[`\\${key}`] = value; 
+    }
+ 
+    static getLatexVariable(variables: string) {
+        const pattern = /\\var\{(\\[^{}]+)\}\{([^{}]+)\}/g
+;
         const matches = [...variables.matchAll(pattern)];
-        const varObject:Record<string,string> = {};
-       matches.map((match) => {
-    
+        
+        
+        
+        return matches.reduce((acc, match) => {
             const [, key, value] = match;
-            varObject[key] = value;
+            acc[key] = value;
             
-        })
-        return varObject;
+            return LatexVariable.variables = acc;
+        }, {} as Record<string, string>);
     }
-    convertToLatex(){
-        return Object.entries(this.variables).map(([key,value])=>{
-            return `\\var{${key}}{${value}}`
-        }).join("\n")
+ 
+    static convertToLatex() {
+        return Object.entries(LatexVariable.variables)
+            .map(([key, value]) => `\\var{${key}}{${value}}`)
+            .join("\n");
     }
-}
+ }
+ 

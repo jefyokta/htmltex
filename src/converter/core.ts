@@ -1,7 +1,8 @@
 import { Parser } from "htmlparser2";
 import { DomHandler, Element, Text, Node } from "domhandler";
-import { LatexConverter } from "../htmltex";
+import { LatexConverter, type BracesBracketAttr } from "../htmltex";
 import { CenteredLabeledImage } from "../utils";
+import LatexVariable from "./texvariable";
 
 
 
@@ -50,15 +51,28 @@ export const convertHtmlToLatex = (html: string): string => {
 
   export const convertLatexToHtml = (latex: string): string => {
     const latexPattern = /\\([a-z]+)(?:\{([^}]*)\}| ?(.+))?/g;
+    const l = /\\([a-z]+)\{((?:[^{}]+|\{[^{}]*\})*)\}/g
+
+    const variablePattern = /\\([a-zA-Z0-9]+(?:[A-Z][a-z0-9]*)*)/g;
+
+    const BracketBracesPattern = /\\([a-zA-Z]+)\[(.*?)\]\{(.*?)\}/g;
+
     const figurePattern = /\\begin\{figure\}[\s\S]*?\\end\{figure\}/g;
     const tablePattern = /\\begin\{tabular\}{\{.*?\}}\\n\\hline[\s\S]*?\\end\{tabular\}/g
   
     return latex
+      .replace(variablePattern,(match,varname,...others)=>{     
+        const value =LatexVariable.get(varname)
+        if (typeof value === 'string') {
+            return value 
+        }
+        return match
+    })       
       .replace(tablePattern,(match,content)=>{
         const records = match[1]
             return `<table record="${records}">
                         ${content}
-            </table`
+            </table>`
         })
       .replace(figurePattern, (match) => {
         const figureContent = match.match(/\\includegraphics\[(.*?)\]\{(.*?)\}/);
@@ -76,19 +90,58 @@ export const convertHtmlToLatex = (html: string): string => {
           </figure>
         `;
       })
-      .replaceAll(latexPattern, (match, command, content, text,...f) => {
-        const converter = LatexConverter.texToHtml[command];
+      .replaceAll(BracketBracesPattern, (match,command,bracket,braces,num,raw,...others) => {
+        
+
+        const converter = LatexConverter.texToHtml.bracketbraces[command]
         if (converter) {
-          const attrs = {
+          return  converter({braces,bracket})
+            
+        }
+        console.log(match);
+        
+        return match;
+      })
+      .replaceAll(l, (match, command, content, text,num,raw,...others) => {
+        const converter = LatexConverter.texToHtml.bracesbracket[command];
+        if (converter) {
+          const attrs:BracesBracketAttr = {
             color: content || "",
             src: content || "",
             href: content || "",
             content: content || "",
-          };          
-          return converter(attrs, content || "", text || "");
+            num,
+            raw,
+            command,
+            match,
+            text,
+            ...others
+          };                    
+          return converter(attrs);
         }
   
         return `<div class="latex-unknown" tex="${match}">[Unrecognized: ${match}]</div>`;
+      })
+      .replaceAll(latexPattern, (match, command, content, text,num,raw,...others) => {
+        const converter = LatexConverter.texToHtml.bracesbracket[command];
+        if (converter) {
+          const attrs:BracesBracketAttr = {
+            color: content || "",
+            src: content || "",
+            href: content || "",
+            content: content || "",
+            num,
+            raw,
+            command,
+            match,
+            text,
+            ...others
+          };  
+                  
+          return converter(attrs);
+        }
+  
+        return match;
       });
   };
   

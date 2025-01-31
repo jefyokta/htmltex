@@ -1,31 +1,75 @@
 
-import { convertLatexToHtml } from "./converter";
+import { convertLatexToHtml ,Begin, End} from "./converter";
+export type BracesBracketAttr = {
+  color: string,
+  src: string,
+  href: string,
+  content: string,
+  num:number,
+  raw:string,
+  command:string,
+  match:string,
+  text:string
+}
+export type BracketBracesAttr = {
+  bracket:any,
+  braces:any
+}
+
+
+
+type HtmlConverterFunction = (attrs: Record<string, string>, content: string) => string;
+type HtmlMapping = Record<string, HtmlConverterFunction>
+
+
+type BracesBracketFunc = (attrs:BracesBracketAttr) =>string;
+
+
+type BracketBraceFunc = (attr:BracketBracesAttr) =>string
+
+type LatexMapping = {
+  bracesbracket:Record<string,BracesBracketFunc>,
+  braces:any,
+  bracketbraces:Record<string,BracketBraceFunc>,
+};
+
+
+type ConverterMap = {
+  htmlToTex:HtmlMapping,
+  texToHtml:LatexMapping,
+}
+
+
+
+
+
+
 
 
 
 const LatexConverter: ConverterMap = {
   htmlToTex: {
-    h1: (_, content) => `\\chapter{${content}}`,
-    h2: (_, content) => `\\section{${content}}`,
-    h3: (_, content) => `\\subsection{${content}}`,
-    h4: (_, content) => `\\subsubsection{${content}}`,
-    h5: (_, content) => `\\paragraph{${content}}`,
-    h6: (_, content) => `\\subparagraph{${content}}`,
-    b: (_, content) => `\\textbf{${content}}`,
-    i: (_, content) => `\\textit{${content}}`,
-    u: (_, content) => `\\underline{${content}}`,
-    p: (_, content) => `\\par ${content}`,
-    span: (attrs, content) =>
+    h1: (_:any, content:string) => `\\chapter{${content}}`,
+    h2: (_:any, content:string) => `\\section{${content}}`,
+    h3: (_:any, content:string) => `\\subsection{${content}}`,
+    h4: (_:any, content:string) => `\\subsubsection{${content}}`,
+    h5: (_:any, content:string) => `\\paragraph{${content}}`,
+    h6: (_:any, content:string) => `\\subparagraph{${content}}`,
+    b: (_:any, content:string) => `\\textbf{${content}}`,
+    i: (_:any, content:string) => `\\textit{${content}}`,
+    u: (_:any, content:string) => `\\underline{${content}}`,
+    p: (_:any, content:string) => `\\par ${content}`,
+    span: (attrs:any, content:any) =>
       attrs.style?.includes("color")
         ? `\\textcolor{${getColor(attrs.style)}}{${content}}`
         : content,
     br: () => `\\\\`,
-    ul: (_, content) => `\\begin{itemize}${content} \\end{itemize}`,
-    ol: (_, content) => `\\begin{enumerate}${content} \\end{enumerate}`,
-    li: (_, content) => `\\item ${content}`,
-    img: (attrs) =>{      
+    ul: (_:any, content:string) => `\\begin{itemize}${content} \\end{itemize}`,
+    ol: (_:any, content:string) => `\\begin{enumerate}${content} \\end{enumerate}`,
+    li: (_:any, content:string) => `\\item ${content}`,
+    img: (attrs:any) =>{      
     return  `\\includegraphics[width=${attrs.width || "0.5\\textwidth"}]{${attrs.src}}`},
-    a: (attrs, content) =>{ 
+    a: (attrs:any, content:any) =>{ 
       if (attrs.cite) {
         if (attrs.cite === "normal") {
           return `\\cite{${attrs.citeId}}`
@@ -37,31 +81,31 @@ const LatexConverter: ConverterMap = {
       return`\\href{${attrs.href}}{${content}}`}
       ,
     hr: () => `\\noindent\\rule{\\textwidth}{0.4pt}`,
-    blockquote: (_, content) => `\\begin{quote}${content}\\end{quote}`,
-    code: (_, content) => `\\texttt{${content}}`,
-    pre: (_, content) => `\\begin{verbatim}${content}\\end{verbatim}`,
-    sup: (_, content) => `^{${content}}`,
-    sub: (_, content) => `_{${content}}`,
-    small: (_, content) => `\\footnotesize{${content}}`,
-    strong: (_, content) => `\\textbf{${content}}`,
-    figcaption:(_,content)=>`\\caption{${content}}`,
-    table: (attrs, content) => `\\begin{tabular}{${ attrs.records }}\n\\hline\n${content}\\end{tabular}\n\\vspace{1em}`,
-    tr: (attrs, content) => {
+    blockquote: (_:any, content:string) => `\\begin{quote}${content}\\end{quote}`,
+    code: (_:any, content:string) => `\\texttt{${content}}`,
+    pre: (_:any, content:string) => `\\begin{verbatim}${content}\\end{verbatim}`,
+    sup: (_:any, content:string) => `^{${content}}`,
+    sub: (_:any, content:string) => `_{${content}}`,
+    small: (_:any, content:string) => `\\footnotesize{${content}}`,
+    strong: (_:any, content:string) => `\\textbf{${content}}`,
+    figcaption:(_:any,content:any)=>`\\caption{${content}}`,
+    table: (attrs:any, content:any) => `\\begin{tabular}{${ attrs.records }}\n\\hline\n${content}\\end{tabular}\n\\vspace{1em}`,
+    tr: (attrs:any, content:any) => {
        return `${content} \\\\\n\\hline`
       },
-    td: (attrs, content) => {
+    td: (attrs:any, content:any) => {
       let options = "";
       if (attrs.colspan) options += `\\multicolumn{${attrs.colspan}}{c}{${content}}`;
       if (attrs.rowspan) options += `\\multirow{${attrs.rowspan}}{*}{${content}}`;
       return options || `${content} &`;
     },
-    th: (attrs, content) => {
+    th: (attrs:any, content:string) => {
       let options = "";
       if (attrs.colspan) options += `\\multicolumn{${attrs.colspan}}{c}{\\textbf{${content}}}`;
       if (attrs.rowspan) options += `\\multirow{${attrs.rowspan}}{*}{\\textbf{${content}}}`;
       return options || `\\textbf{${content}} &`;
     },    
-    figure:(attrs,content)=>{
+    figure:(attrs:any,content:any)=>{
      const alignment = attrs?.style?.match(/text-align:\s*([^;]+)/)
      if (alignment) {
       if (alignment[0] == 'center') {
@@ -77,7 +121,7 @@ const LatexConverter: ConverterMap = {
         \\centering${content}\\end{figure}
       `
     },
-    div:(attrs,content)=>{
+    div:(attrs:any,content:any)=>{
         if (attrs?.begin) {
             return `\\begin{${attrs?.content}}\n`;
         }
@@ -94,78 +138,71 @@ const LatexConverter: ConverterMap = {
     }
   },
   texToHtml: {
-    cite: (attrs:any, content:any) => {
-    return  `<a href="#" class="cite" cite="normal" citeId="${content}" style="color:black;text-decoration:none" ></a>`
+    bracketbraces:{
+      includegraphics:(attr:BracketBracesAttr)=>{
+        const {braces,bracket} = attr
+        return `<img src="${braces}" ${bracket ? `style="${bracket.replace(/=/g, ':')}"` : ""} />`;
+      }
     },
-    citeA:(attrs:any, content:any) => {
-      return  `<a href="#" class="citeA" cite="a" citeId="${content}" style="color:black;text-decoration:none" ></a>`
-      },
-    chapter: ({content}:any) => `<h1 >${content}</h1>`,
-    section: ({content}:any) => `<h2 >${content}</h2>`,
-    subsection: ({content}:any) => `<h3>${content}</h3>`,
-    subsubsection: ({content}:any) => `<h4>${content}</h4>`,
-    paragraph: ({content}:any) => `<h5>${content}</h5>`,
-    subparagraph: (content:string) => `<h6>${content}</h6>`,
-    textbf: ({content}:TexAttribute) => `<b>${content}</b>`,
-    textit: ({content}:TexAttribute) => `<i>${content}</i>`,
-    underline: ({content}:TexAttribute) => `<u>${content}</u>`,
-    par: (data:any,content:any,text:any) =>  `<p>${text}</p>`,
-    textcolor: (attrs:any, content:string) =>
-      `<span style="color:${attrs[1]}">${content}</span>`,
-    begin_itemize: () => `<ul>`,
-    end_itemize: () => `</ul>`,
-    begin_enumerate: () => `<ol>`,
-    end_enumerate: () => `</ol>`,
-    item: (attrs:TexAttribute,content:any,text:any) =>   `<li>${convertLatexToHtml(text)}</li>`,
-    includegraphics: (attrs:any) =>`<img src="${attrs[1]}" style="width:${attrs[2] || "50%"}" />`,
-    href: (attrs:any, content:any) => `<a href="${attrs[1]}">${content}</a>`,
-    rule: () => `<hr />`,
-    quote: (content:any) => `<blockquote>${content}</blockquote>`,
-    texttt: (content:any) => `<code>${content}</code>`,
-    verbatim: (content:any) => `<pre>${content}</pre>`,
-    sup: (content:any) => `<sup>${content}</sup>`,
-    sub: (content:any) => `<sub>${content}</sub>`,
-    footnotesize: (content:any) => `<small>${content}</small>`,
-    begin:(opt:any)=> {
-      // console.log(opt);
-      
-      const {content} = opt
-      
-      if (content == 'itemize') {
-        return LatexConverter.texToHtml.begin_itemize()
-      }
-      if (content == "enumerate") {
-        return LatexConverter.texToHtml.begin_enumerate()
-      }
-      if (content === 'figure') {
-        return `<figure>`
-        
-      }
-      return `<div  content="${content}" begin="true"></div>`
+    braces:{},
+    bracesbracket:{
+      cite: ({content}:BracesBracketAttr) => {
+        return  `<a href="#" class="cite" cite="normal" citeId="${content}" style="color:black;text-decoration:none" ></a>`
+        },
+        citeA:({content}:BracesBracketAttr) => {
+          return  `<a href="#" class="citeA" cite="a" citeId="${content}" style="color:black;text-decoration:none" ></a>`
+          },
+        chapter: ({content}:BracesBracketAttr) => `<h1 >${convertLatexToHtml(content)}</h1>`,
+        section: ({content}:BracesBracketAttr) => `<h2 >${convertLatexToHtml(content)}</h2>`,
+        subsection: ({content}:BracesBracketAttr) => `<h3>${convertLatexToHtml(content)}</h3>`,
+        subsubsection: ({content}:BracesBracketAttr) => `<h4>${convertLatexToHtml(content)}</h4>`,
+        paragraph: ({content}:BracesBracketAttr) => `<h5>${content}</h5>`,
+        subparagraph: ({content}:BracesBracketAttr) => `<h6>${content}</h6>`,
+        textbf: ({content}:BracesBracketAttr) => `<b>${content}</b>`,
+        textit: ({content}:BracesBracketAttr) => `<i>${content}</i>`,
+        underline: ({content}:BracesBracketAttr) => `<u>${content}</u>`,
+        par: ({text}:BracesBracketAttr) =>  `<p>${text}</p>`,
+        textcolor: ({content,color}:BracesBracketAttr) =>
+          `<span style="color:${color}">${content}</span>`,
+        begin_itemize: () => `<ul>`,
+        end_itemize: () => `</ul>`,
+        begin_enumerate: () => `<ol>`,
+        end_enumerate: () => `</ol>`,
+        item: ({text}:BracesBracketAttr) =>   `<li>${convertLatexToHtml(text)}</li>`,
+        includegraphics: (attrs:any) =>`<img src="${attrs[1]}" style="width:${attrs[2] || "50%"}" />`,
+        href: ({content}:BracesBracketAttr) => `<a href="">${content}</a>`,
+        rule: () => `<hr />`,
+        quote: (content:any) => `<blockquote>${content}</blockquote>`,
+        texttt: (content:any) => `<code>${content}</code>`,
+        verbatim: (content:any) => `<pre>${content}</pre>`,
+        sup: (content:any) => `<sup>${content}</sup>`,
+        sub: (content:any) => `<sub>${content}</sub>`,
+        footnotesize: (content:any) => `<small>${content}</small>`,
+        begin:(opt:BracesBracketAttr)=> {     
+          const content = opt.content
     
-    },
-    end:({content}:any)=>{
-      if (content == 'itemize') {
-        return LatexConverter.texToHtml.end_itemize()
-      }
-      if (content == "enumerate") {
-        return LatexConverter.texToHtml.end_enumerate()
-      }
-
-      if (content === 'figure') {
-        return `</figure>`
+          const begin = new Begin        
+          return  begin.call(content as  any,opt)
+          
+          
         
-      }
-     return `<div content="${content}" end="true"></div>`
-    }
+        },
+        end:(opt:BracesBracketAttr)=>{
+    
+          const end = new End
+          return end.call(opt.content as any, opt)
+        }
+
+    },
+  
   },
+
 };
 
 const getColor = (style: string): string => {
   const match = style.match(/color:\s*([^;]+)/);
   return match ? match[1] : "black";
 };
-
 
 
 
