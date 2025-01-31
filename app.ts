@@ -20,12 +20,5 @@ const editor = new Editor({
     editable: true,
 })
 
-const compile = ()=>{
-    const html = editor.getHTML();
-    const latex = convertHtmlToLatex(html);
-    console.log(latex)
-}
-
-compile();;
 
 

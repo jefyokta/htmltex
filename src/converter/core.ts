@@ -1,7 +1,7 @@
 import { Parser } from "htmlparser2";
 import { DomHandler, Element, Text, Node } from "domhandler";
-import { LatexConverter } from "./htmltex";
-import { CenteredLabeledImage } from "./utils";
+import { LatexConverter } from "../htmltex";
+import { CenteredLabeledImage } from "../utils";
 
 
 
@@ -84,10 +84,7 @@ export const convertHtmlToLatex = (html: string): string => {
             src: content || "",
             href: content || "",
             content: content || "",
-          };
-          // console.log(f);
-          
-  
+          };          
           return converter(attrs, content || "", text || "");
         }
   

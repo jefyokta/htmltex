@@ -1,7 +1,5 @@
 import { Parser } from "htmlparser2";
-import { LabeledImage } from "./src/components/image";
-import { convertHtmlToLatex } from "./src/converter";
-import { convertLatexToHtml } from "./src/converter";
+import { convertLatexToHtml, getBibFromDoi ,CiteUtils} from "./loader";
 
 
 export const htmlToTex =convertLatexToHtml(`
@@ -67,17 +65,7 @@ Pada bab ini menguraikan beberapa analisis yang dibutuhkan dalam membangun siste
 Bab ini berisikan kesimpulan mengenai hasil dari perancangan aplikasi yang telah dibuat, dan saran dari pembaca apabila ingin mengembangkan aplikasi ini lebih lanjut.
 `)
 
-const page =document.getElementById('page')
-
-if (page) {  
-  // page.innerHTML = htmlToTex
-  let number = 1
-    page.querySelectorAll('h2').forEach((element)=>{
-      element.setAttribute('numbering',`${number++}`)
-      element.setAttribute('contenteditable','false')
-      element.innerHTML = `1.${element.getAttribute('numbering')} ${element.innerHTML}`
-      
-    })
-}
-
-convertLatexToHtml(`\\begin{enumarate}[name=jepi]`);
+getBibFromDoi('http://dx.doi.org/10.1093/ajae/aaq063').then(res=>{
+  console.log(new CiteUtils({cite:res}).toCiteA());
+  
+})
