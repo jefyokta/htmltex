@@ -1,8 +1,5 @@
-export const Menu = ()=>{
-
-    return `
-    <div>
-    <ul>
-    </ul>
-    </div> `
+class Menu {
+  _call(method: keyof this) {
+    (this[method] as Function)();
+  }
 }

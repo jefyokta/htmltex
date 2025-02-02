@@ -1,5 +1,5 @@
-import {  simplelTable } from "./src/components/table";
+import { simplelTable } from "./src/components/table";
 
-const table=simplelTable({rows:9,cols:5,type:'longtable'})
+const table = simplelTable({ rows: 9, cols: 5, type: "longtable" });
 
-document.body.innerHTML = table
+document.body.innerHTML = table;

@@ -1,4 +1,5 @@
-export const style:string = `body {
+export const style: string = `
+body {
   counter-reset: h1-counter;
 }
 
@@ -94,4 +95,4 @@ li p {
 
 .tiptap:focus {
   outline: none;
-}`
+}`;

@@ -1,59 +1,68 @@
-interface ConverterClass{
-    call(method: keyof this, ...args:any[]):string
-    except(method:string,...args:any[]):string
-  }
+import type { NormalAttr } from "../htmltex";
+import { latexPlaceHolder } from "../utils";
+
+export type BeginEndParams = {
+  command: string;
+  content: any;
+  match: any;
+};
+
+interface ConverterClass {
+  _call(method: keyof this, args: NormalAttr | BeginEndParams): string;
+  except(args: NormalAttr | BeginEndParams): string;
+}
 
 export abstract class BaseConverter implements ConverterClass {
-    call(method: keyof this, ...args: any[]) {
-      if (typeof this[method] === "function" && method !== 'call') {
-        return (this[method] as Function)(...args);
-      }
-      return this.except((method as string),...args)
+  _call(method: keyof this, args: NormalAttr | BeginEndParams) {
+    if (typeof this[method] === "function" && method !== "call") {
+      return (this[method] as Function)(args);
     }
-
-    except(method:string,...args:any[]): string {
-        return '<div data="method-not-found">'
-    }
+    return this.except(args);
   }
 
-  
-  export class Begin extends BaseConverter{
-  
-  
-   
-    figure(){
-      return '<figure>'
-    }
-    enumerate(){
-     return '<ol>'
-  
-    }
-    itemize(){
-      return '<ul>'
-    }
-    matrix(){
-        
-    }
-    except(method:string,...args:any[]): string {
-        return `<div content="${method}" begin="true"></div>`
-    }
-  
-  
+  except(args: NormalAttr | BeginEndParams): string {
+    return args.match;
+  }
+}
+
+export class Begin extends BaseConverter {
+  figure() {
+    return "<figure>";
+  }
+  enumerate() {
+    return "<ol>";
+  }
+  itemize() {
+    return "<ul>";
+  }
+}
+
+export class End extends BaseConverter {
+  figure() {
+    return "</figure>";
+  }
+  enumerate() {
+    return "</ol>";
+  }
+  itemize() {
+    return "</ul>";
+  }
+}
+
+export class BeginEndConverter extends BaseConverter {
+  private toKatex(match: string) {
+    const katexContent = latexPlaceHolder(match);
+    return `<katex>${katexContent}</katex>`;
   }
 
-  export class End extends BaseConverter{
-    figure(){
-        return '</figure>'
-    }
-    enumerate(){
-       return '</ol>'
-    
-      }
-    itemize(){
-        return '</ul>'
-      }
-    except(method:string,...args: any[]): string {
-        return `<div content="${method}" end="true"></div>`
-    }
-  
+  matrix(args: BeginEndParams) {
+    return this.toKatex(args.match);
   }
+  pmatrix(args: BeginEndParams) {
+    return this.toKatex(args.match);
+  }
+
+  except(args: BeginEndParams): string {
+    return args.match;
+  }
+}

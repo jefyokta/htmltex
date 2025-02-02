@@ -1,9 +1,10 @@
 import { Editor } from "@tiptap/core";
 import StarterKit from "@tiptap/starter-kit";
 
-import { LabeledImage } from "./src/tiptapextensions/image";
+import { LabeledImage } from "./src/tiptap-extensions/image";
 import { convertLatexToHtml, LatexConverter } from "./loader";
-import LatexVariable from "./src/converter/texvariable";
+import LatexVariable from "./src/converter/tex-variable";
+import { TexVarExtension } from "./src/tiptap-extensions/var";
 const vars = `
 
 \\var{\\judul}{Rancang Bangun Sistem Informasi Pemesanan Rumah}
@@ -60,16 +61,10 @@ const vars = `
 \\var{\\babTiga}{TUGAS KERJA PRAKTEK}
 \\var{\\babEmpat}{ANALISA DAN HASIL}
 \\var{\\babLima}{PENUTUP}
-`
-LatexVariable.getLatexVariable(vars)
-const allvars =LatexVariable.getAll()
-console.log(allvars);
+`;
+LatexVariable.setLatexVars(vars);
 
-
-
-
-
-const htmlToTex =convertLatexToHtml(`
+const htmlToTex = convertLatexToHtml(`
 
 \\chapter{\\babSatu}
 
@@ -110,7 +105,7 @@ Adapun manfaat penulis melakukan kerja praktek ini adalah:
 \\section{Sistematika Penulisan}
 Sistematika penulisan laporan kerja praktek ini dibagi menjadi 5 (lima) bab. Berikut penjelasan tentang masing-masing bab:
 
-\\textbf{BAB 1. \\babSatu}
+BAB 1. \\babSatu
 
 Dalam bab ini penulis memaparkan tentang latar belakang, rumusan masalah, batasan masalah, tujuan, manfaat, tempat dan waktu pelaksanaan serta sistematika penulisan laporan kerja praktek.
 
@@ -130,17 +125,15 @@ Pada bab ini menguraikan beberapa analisis yang dibutuhkan dalam membangun siste
 \\textbf{BAB 5. \\babLima}
 
 Bab ini berisikan kesimpulan mengenai hasil dari perancangan aplikasi yang telah dibuat, dan saran dari pembaca apabila ingin mengembangkan aplikasi ini lebih lanjut.
-`)
+`);
+
+console.log(htmlToTex);
+
 
 const editor = new Editor({
-    element: document.querySelector("#page")||undefined,
-    extensions:[
-        StarterKit,
-        LabeledImage
-    ],
-    content:htmlToTex,
-    editable: true,
-})
-
-
-
+  element: document.querySelector("#page") || undefined,
+  extensions: [StarterKit, LabeledImage,TexVarExtension],
+  content: htmlToTex,
+  editable: true,
+});
+// window.editor =editor;
