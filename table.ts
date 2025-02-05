@@ -1,5 +1,4 @@
-import { simplelTable } from "./src/components/table";
+import { getBibFromDoi } from "./src/actions/cites";
 
-const table = simplelTable({ rows: 9, cols: 5, type: "longtable" });
 
-document.body.innerHTML = table;
+getBibFromDoi("https://doi.org/10.1038/s41586-020-2649-2")

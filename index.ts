@@ -1,13 +1,38 @@
 import { convertLatexToHtml } from "./loader";
-import { KatexComponents } from "./src/etc/custom-components";
+import { KatexComponents } from "./src/components/katex";
 
 
-customElements.define('katex',KatexComponents)
+// customElements.define('katex',KatexComponents)
 
-const content: string = '_tex.bs.figure{test}';
-const newContent = content.replace(/_tex\.bs\.(\w+)/g, '\\$1'); 
-console.log(newContent);
+// const content: string = '_tex.bs.figure{test}';
+// const newContent = content.replace(/_tex\.bs\.(\w+)/g, '\\$1'); 
+// console.log(newContent);
 
+
+fetch('https://coretaxdjp.pajak.go.id/registrationportal/api/NewRegistration/registerPortalDomesticNikTaxpayerWithoutCase',{
+  method:'POST',
+  headers:{
+    "accept":"application/json, text/plain, */*",
+    "accept-language":"en-US,en;q=0.7",
+    "content-type":"multipart/form-data",
+    "sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Brave\";v=\"132\"",
+    "sec-ch-mobile":"?0",
+    "sec-ch-platform":"\"Windows\"",
+    "sec-fetch-dest":"empty",
+    "sec-fetc-mode":"cors",
+    "sec-fetc-site":"same-origin",
+    "sec-gcp":"1",
+    "x-security-request":"required"
+
+
+
+  }
+}).then(r=>{
+  console.log(r)
+  // r.json().then(rs=>console.log(rs))
+  r.text().then(rt=>console.log(rt))
+
+})
 
 
 

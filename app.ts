@@ -1,10 +1,23 @@
-import { Editor } from "@tiptap/core";
-import StarterKit from "@tiptap/starter-kit";
 
-import { LabeledImage } from "./src/tiptap-extensions/image";
-import { convertLatexToHtml, LatexConverter } from "./loader";
+import { CiteIndexDB, CiteLocalStorage, convertLatexToHtml } from "./loader";
 import LatexVariable from "./src/converter/tex-variable";
-import { TexVarExtension } from "./src/tiptap-extensions/var";
+import Editor from "./src/editor/editor";
+
+
+import CiteManager from "./src/cite/cite-manager";
+CiteManager.init(new CiteLocalStorage(`
+  @mastersthesis{martin2024aplikace,
+  title={Aplikace pro podporu v{\`y}uky ATPG algoritm{\\uu}},
+  author={Martin, Fab{\'\i}k},
+  year={2024}
+}
+  `))
+CiteManager.add({id:"cite1",data:{
+  author:"okta, jepi and opuak, rio",
+  year:"2024"
+},
+type:"cite"
+})
 const vars = `
 
 \\var{\\judul}{Rancang Bangun Sistem Informasi Pemesanan Rumah}
@@ -127,13 +140,18 @@ Pada bab ini menguraikan beberapa analisis yang dibutuhkan dalam membangun siste
 Bab ini berisikan kesimpulan mengenai hasil dari perancangan aplikasi yang telah dibuat, dan saran dari pembaca apabila ingin mengembangkan aplikasi ini lebih lanjut.
 `);
 
-console.log(htmlToTex);
 
 
-const editor = new Editor({
-  element: document.querySelector("#page") || undefined,
-  extensions: [StarterKit, LabeledImage,TexVarExtension],
-  content: htmlToTex,
-  editable: true,
-});
-// window.editor =editor;
+const editor =  new Editor({element:document.getElementById('container')||null,content:htmlToTex})
+
+
+window.editor = editor.getEditor()
+
+
+const t = {
+    t:function (){
+    console.log(editor.getLatex());
+    
+}}
+
+window.t =t

@@ -1,0 +1,5 @@
+POST https://coretaxdjp.pajak.go.id/registrationportal/api/NewRegistration/registerPortalDomesticNikTaxpayerWithoutCase HTTP/1.1
+
+Accept: "application/json, text/plain"
+Content-Type: "multipart/form-data"
+Sec-Ch-Ua : "Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"

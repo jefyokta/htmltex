@@ -1,4 +1,8 @@
+import { Listener } from "../events/listener";
+import { VarChanged } from "../events/var-changed";
+
 export default class LatexVariable {
+  private static constantavars = ["nim", "nama", "judul"];
   private static variables: Record<string, string> = {};
 
   static get(key: string) {
@@ -10,7 +14,14 @@ export default class LatexVariable {
   }
 
   static set(key: string, value: string) {
-    LatexVariable.variables[`\\${key}`] = value;
+    if (this.constantavars.includes(key.toLowerCase())) {
+      throw new Error("Cannot set tex absolute var " + key);
+    }
+    this.variables[`\\${key}`] = value;
+    Listener.emit(VarChanged.getEvent());
+  }
+  static setConstVar(vars: string[]) {
+    this.constantavars = vars.map((v) => v.toLowerCase());
   }
 
   static setLatexVars(variables: string) {
@@ -26,6 +37,9 @@ export default class LatexVariable {
       },
       {} as Record<string, string>,
     );
+  }
+  static delete(key: string) {
+    this.variables =  Object.fromEntries( Object.entries(this.variables).filter(([k]) => k !== key));
   }
 
   static convertToLatex() {

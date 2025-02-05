@@ -3,19 +3,23 @@ export type CiteLanguage = {
   etal: string;
 };
 
-type CiteUtilsOptions = {
-  lang?: CiteLanguage;
-  cite: Cite;
+export const CiteLangID: CiteLanguage = {
+  conjunction: "dan",
+  etal: "dkk.",
+};
+
+export const CiteLangEN: CiteLanguage = {
+  conjunction: "and",
+  etal: "et al.",
 };
 
 export class CiteUtils {
   private cite: Cite;
-  private lang: CiteLanguage = CiteLangID;
+  private static lang: CiteLanguage = CiteLangID;
   private maxAuthors = 5;
 
-  constructor(options: CiteUtilsOptions) {
-    this.cite = options.cite;
-    if (options.lang) this.lang = options.lang;
+  constructor(cite: Cite) {
+    this.cite = cite;
   }
   toCiteA(): string {
     return `${this.formatAuthorname()} (${this.cite.data.year})`;
@@ -28,17 +32,12 @@ export class CiteUtils {
     return this;
   }
 
-  setOptions(options: CiteUtilsOptions) {
-    this.cite = options.cite;
-    if (options.lang) this.lang = options.lang;
-    return this;
-  }
   setMaxAuthors(maxAuthors: number) {
     this.maxAuthors = maxAuthors;
     return this;
   }
 
-  setLang(lang: CiteLanguage) {
+  static setLang(lang: CiteLanguage) {
     this.lang = lang;
     return this;
   }
@@ -51,6 +50,10 @@ export class CiteUtils {
     const names = this.cite.data.author;
     if (!names) return "";
 
+    if (!names.includes(" and ")) {
+      return names.split(",")[0] || names;
+    }
+
     const arr = names.split(" and ");
     const nameArray = arr.map((name) => {
       if (name.includes(",")) {
@@ -61,13 +64,13 @@ export class CiteUtils {
     });
 
     if (nameArray.length > this.maxAuthors) {
-      return nameArray.slice(0, 5).join(", ") + " " + this.lang.etal;
+      return nameArray.slice(0, 5).join(", ") + " " + CiteUtils.lang.etal;
     }
 
     if (nameArray.length > 1) {
       return (
         nameArray.slice(0, -1).join(", ") +
-        ` ${this.lang.conjunction} ` +
+        ` ${CiteUtils.lang.conjunction} ` +
         nameArray[nameArray.length - 1]
       );
     }
@@ -75,13 +78,3 @@ export class CiteUtils {
     return names;
   }
 }
-
-export const CiteLangID: CiteLanguage = {
-  conjunction: "dan",
-  etal: "dkk.",
-};
-
-export const CiteLangEN: CiteLanguage = {
-  conjunction: "and",
-  etal: "et al.",
-};

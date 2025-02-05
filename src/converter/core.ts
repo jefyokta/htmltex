@@ -43,7 +43,6 @@ export const convertHtmlToLatex = (html: string): string => {
 export const convertLatexToHtml = (latex: string): string => {
   const latexPattern = /\\([a-z]+)(?:\{([^}]*)\}| ?(.+))?/g;
   const l = /\\([a-z]+)\{((?:[^{}]+|\{[^{}]*\})*)\}/g;
-
   const variablePattern = /\\([a-zA-Z0-9]+(?:[A-Z][a-z0-9]*)*)/g;
   const beginEnd = /\\begin\{([a-zA-Z]+)\}([\s\S]*?)\\end\{\1\}/g;
   const BracketBracesPattern = /\\([a-zA-Z]+)\[(.*?)\]\{(.*?)\}/g;
@@ -55,8 +54,6 @@ export const convertLatexToHtml = (latex: string): string => {
     .replace(variablePattern, (match, varname, ...others) => {
       const value = LatexVariable.get(varname);
       if (typeof value === "string") {
-        console.log(value);
-
         return `<span var="${varname}">${value}</span>`;
       }
       return match;
@@ -90,7 +87,7 @@ export const convertLatexToHtml = (latex: string): string => {
       (match, command, bracket, braces, num, raw, ...others) => {
         const converter = LatexConverter.texToHtml.bracketbraces[command];
         if (converter) {
-          return converter({ braces, bracket });
+          return converter({ match, braces, bracket });
         }
 
         return match;

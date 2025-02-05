@@ -1,18 +1,18 @@
 import { Node, mergeAttributes } from "@tiptap/core";
 import CiteManager from "../cite/cite-manager";
-import { formatAuthorName } from "../components/cite";
 import { CiteUtils } from "../cite";
 
 type CiteOptions = {
   cite: string;
-  citeA: boolean;
+  citeA?: boolean;
 };
 
 export const Cite = Node.create<CiteOptions>({
   name: "cite",
-  group: "inline", 
+  group: "inline",
   inline: true,
   atom: true,
+
   addAttributes() {
     return {
       cite: {
@@ -32,6 +32,10 @@ export const Cite = Node.create<CiteOptions>({
     return [
       {
         tag: "cite[cite]",
+        attrs: {
+          cite: this.options.cite,
+          citeA: this.options.citeA,
+        },
       },
     ];
   },
@@ -39,26 +43,29 @@ export const Cite = Node.create<CiteOptions>({
   renderHTML({ node }) {
     const cite = CiteManager.get(node.attrs.cite);
     if (!cite) {
-      return ["cite", { class: "cite", cite: "not-found" }, "(Citation Not Found)"];
+      return [
+        "cite",
+        { class: "cite", cite: node.attrs.cite },
+        "(Unknown citation!)",
+      ];
     }
-    const c =new CiteUtils({cite:cite})
+    const c = new CiteUtils(cite);
 
     return [
       "cite",
-      mergeAttributes({ class: "cite",cite:cite.id }),
-      c.toCite()
-      ,
+      mergeAttributes({ class: "cite", cite: cite.id }),
+      node.attrs.citeA ? c.toCiteA() : c.toCite(),
     ];
   },
 
-  addCommands():any {
+  addCommands(): any {
     return {
       insertCitation:
-        (citeId: string) =>
-        ({ commands }:any) => {
+        (opt: CiteOptions) =>
+        ({ commands }: any) => {
           return commands.insertContent({
             type: this.name,
-            attrs: { cite: citeId },
+            attrs: { cite: opt.cite, citeA: opt.citeA || false },
           });
         },
     };

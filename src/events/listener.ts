@@ -1,9 +1,9 @@
 export class Listener {
-  public emit(event: CustomEvent) {
+  static emit(event: CustomEvent) {
     document.dispatchEvent(event);
   }
 
-  public on(event: string, callback: any) {
+  static on(event: string, callback: any) {
     document.addEventListener(event, callback);
   }
 }

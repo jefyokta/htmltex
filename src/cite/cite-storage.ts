@@ -14,13 +14,22 @@ export class CiteLocalStorage implements CiteStorage {
     localStorage.setItem("cites", JSON.stringify(cites));
   }
   getAll() {
-    const cites: Cite[] = JSON.parse(localStorage.getItem("cites") || "[]");
-    return cites;
+    const cs = localStorage.getItem("cites");
+    const cites: Cite[] = JSON.parse(cs || "[]");
+    // console.log(cites,cs);
+
+    return cites as Cite[];
   }
 
   get(key: string) {
     const cites = this.getAll();
-    return cites.find((cite) => cite.id === key) || undefined;
+    // console.log(cites);
+    console.log(key);
+
+    const c = cites.find((cite) => cite.id === key) || undefined;
+    console.log(c);
+
+    return c;
   }
 
   update(key: string, data: Record<string, string>) {
@@ -39,8 +48,9 @@ export class CiteLocalStorage implements CiteStorage {
   }
 
   add(cite: Cite) {
-    const newcites = this.getAll().push(cite);
-    localStorage.setItem("cites", JSON.stringify(newcites));
+    const oldcite = this.getAll();
+    oldcite.push(cite);
+    localStorage.setItem("cites", JSON.stringify(oldcite));
   }
 }
 

@@ -1,11 +1,12 @@
 import { handleFigureCaption, reRenderKatex } from "../actions";
 import { Editor as TipTapEditor, type EditorEvents } from "@tiptap/core";
-import { LabeledImage } from "../tiptap-extensions";
+import { Cite, LabeledImage } from "../tiptap-extensions";
 import { style as s } from "../../dist/style";
 import StarterKit from "@tiptap/starter-kit";
 import { convertHtmlToLatex, convertLatexToHtml } from "../converter";
 import { Listener } from "../events/listener";
 import { TexVarExtension } from "../tiptap-extensions/var";
+import { VarConverter } from "../tiptap-extensions/var-converter";
 
 type EditorOptions = {
   element: HTMLElement | null;
@@ -34,7 +35,13 @@ export default class Editor {
 
     this.editor = new TipTapEditor({
       element: page,
-      extensions: [LabeledImage, StarterKit,TexVarExtension,  ...this.options.tiptapextensions],
+      extensions: [
+        LabeledImage,
+        StarterKit,
+        TexVarExtension,
+        VarConverter,
+        Cite,
+      ],
       content: this.options.content,
       editable: true,
     });
@@ -45,11 +52,10 @@ export default class Editor {
     this.editor!.commands.setContent(content);
   }
   public replaceContenFromLatex(latex: string) {
-    const content = convertLatexToHtml(latex);
-
-    this.editor!.commands.setContent(content);
+    this.replaceContent(convertLatexToHtml(latex));
     return this;
   }
+
   public reRender() {
     this.replaceContenFromLatex(this.getHtml())
       .reRenderKatex()

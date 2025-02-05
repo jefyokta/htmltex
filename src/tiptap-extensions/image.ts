@@ -10,6 +10,9 @@ export const LabeledImage = Node.create<ImageOptions>({
 
   defining: true,
 
+  draggable: true,
+  atom: true,
+
   addAttributes() {
     return {
       src: {

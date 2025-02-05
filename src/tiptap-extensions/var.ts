@@ -31,11 +31,14 @@ export const TexVarExtension = Node.create<VarExtensionOptions>({
   },
 
   renderHTML({ node }) {
-    
+    const val = LatexVariable.get(node.attrs.varname);
+    if (!val) {
+      return `\\${node.attrs.varname}`;
+    }
     return [
       "span",
       mergeAttributes({ var: node.attrs.varname, class: "latex-var" }),
-      LatexVariable.get(node.attrs.varname)?? `undefined var \`${node.attrs.varname}\``,
+      val,
     ];
   },
 

@@ -1,9 +1,4 @@
-import {
-  convertLatexToHtml,
-  Begin,
-  End,
-  convertHtmlToLatex,
-} from "./converter";
+import { convertLatexToHtml, Begin, End } from "./converter";
 import { latexPlaceHolder, parseLatexPlaceHolder } from "./utils";
 export type NormalAttr = {
   color: string;
@@ -19,6 +14,7 @@ export type NormalAttr = {
 export type BracketBracesAttr = {
   bracket: any;
   braces: any;
+  match: any;
 };
 
 type HtmlConverterFunction = (
@@ -54,10 +50,15 @@ const LatexConverter: ConverterMap = {
     i: (_: any, content: string) => `\\textit{${content}}`,
     u: (_: any, content: string) => `\\underline{${content}}`,
     p: (_: any, content: string) => `\\par ${content}`,
-    span: (attrs: any, content: any) =>
-      attrs.style?.includes("color")
+    span: (attrs: any, content: any) => {
+      //texvariable
+      if (attrs.var) {
+        return `\\${attrs.var}`;
+      }
+      return attrs.style?.includes("color")
         ? `\\textcolor{${getColor(attrs.style)}}{${content}}`
-        : content,
+        : content;
+    },
     br: () => `\\\\`,
     ul: (_: any, content: string) =>
       `\\begin{itemize}${content} \\end{itemize}`,
@@ -67,15 +68,7 @@ const LatexConverter: ConverterMap = {
     img: (attrs: any) => {
       return `\\includegraphics[width=${attrs.width || "0.5\\textwidth"}]{${attrs.src}}`;
     },
-    a: (attrs: any, content: any) => {
-      // if (attrs.cite) {
-      //   if (attrs.cite === "normal") {
-      //     return `\\cite{${attrs.citeId}}`;
-      //   }
-      //   return `\\citeA{${attrs.citeId}}`;
-      // }
-      return `\\href{${attrs.href}}{${content}}`;
-    },
+    a: (attrs: any, content: any) => `\\href{${attrs.href}}{${content}}`,
     hr: () => `\\noindent\\rule{\\textwidth}{0.4pt}`,
     blockquote: (_: any, content: string) =>
       `\\begin{quote}${content}\\end{quote}`,
@@ -125,8 +118,8 @@ const LatexConverter: ConverterMap = {
       `;
     },
     katex: (_, content) => parseLatexPlaceHolder(content),
-    cite:(attr,content)=> attr?.citeA ? `citeA{${attr.cite}}` : `cite${attr.cite}`     
-    ,
+    cite: (attr, content) =>
+      attr?.citeA ? `citeA{${attr.cite}}` : `cite${attr.cite}`,
     div: (attrs: any, content: any) => {
       if (attrs?.begin) {
         return `\\begin{${attrs?.content}}\n`;
@@ -147,6 +140,8 @@ const LatexConverter: ConverterMap = {
         const { braces, bracket } = attr;
         return `<img src="${braces}" ${bracket ? `style="${bracket.replace(/=/g, ":")}"` : ""} />`;
       },
+      sqrt: (attr: BracketBracesAttr) =>
+        `<katex>${latexPlaceHolder(attr.match)}</katex>`,
     },
     braces: {},
     bracesbracket: {
