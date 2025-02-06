@@ -1,4 +1,4 @@
-import { Node, mergeAttributes } from "@tiptap/core";
+import { Node, mergeAttributes, type CommandProps } from "@tiptap/core";
 import LatexVariable from "../converter/tex-variable";
 
 type VarExtensionOptions = {
@@ -46,10 +46,11 @@ export const TexVarExtension = Node.create<VarExtensionOptions>({
     return {
       insertTexVar:
         (varname: string) =>
-        ({ commands }: any) => {
+        ({ commands }: CommandProps) => {
           return commands.insertContent({
             type: this.name,
             attrs: { varname },
+            contet: LatexVariable.get(varname),
           });
         },
     };

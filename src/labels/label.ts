@@ -1,5 +1,1 @@
-export class Labels {
-
-
-    
-}
+export class Labels {}

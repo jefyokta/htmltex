@@ -1,8 +1,18 @@
-import { Node, mergeAttributes } from "@tiptap/core";
+import { Node, mergeAttributes, type CommandProps } from "@tiptap/core";
 import { CenteredLabeledImage, generateUniqueId } from "../utils";
+import CiteManager from "../cite/cite-manager";
+import { CiteUtils } from "../cite";
 
-export const LabeledImage = Node.create<ImageOptions>({
-  name: "labeledImage",
+export type FigureOptions = {
+  src: string;
+  width?: string | undefined;
+  caption: string;
+  centered: boolean;
+  cite?: string | undefined;
+  label: string;
+};
+export const Figure = Node.create<FigureOptions>({
+  name: "figure",
 
   group: "block",
 
@@ -39,6 +49,7 @@ export const LabeledImage = Node.create<ImageOptions>({
       caption: "",
       centered: true,
       cite: "",
+      label: "",
     };
   },
 
@@ -46,6 +57,16 @@ export const LabeledImage = Node.create<ImageOptions>({
     return [
       {
         tag: "figure",
+        getAttrs(node): FigureOptions {
+          return {
+            src: node.getAttribute("src") || "",
+            width: node.getAttribute("width") || undefined,
+            caption: node.getAttribute("caption") || "",
+            centered: node.getAttribute("centered") ? true : false,
+            cite: node.getAttribute("cite") || undefined,
+            label: node.getAttribute("label") || "",
+          };
+        },
       },
     ];
   },
@@ -53,6 +74,8 @@ export const LabeledImage = Node.create<ImageOptions>({
   renderHTML({ node, HTMLAttributes }) {
     const label = generateUniqueId();
     const { src, width, caption, centered, cite } = node.attrs;
+
+    const ct = CiteManager.get(cite);
 
     return [
       "figure",
@@ -70,7 +93,7 @@ export const LabeledImage = Node.create<ImageOptions>({
       [
         "figcaption",
         {
-          content: `${caption}${cite ? cite : ""}`,
+          content: `${caption}${ct ? new CiteUtils(ct).toCite() : ""}`,
         },
       ],
     ];
@@ -86,7 +109,7 @@ export const LabeledImage = Node.create<ImageOptions>({
           centered: boolean;
           cite: string;
         }) =>
-        ({ commands }: any) => {
+        ({ commands }: CommandProps) => {
           return commands.insertContent({
             type: this.name,
             attrs,
@@ -94,22 +117,22 @@ export const LabeledImage = Node.create<ImageOptions>({
           });
         },
 
-      setLabeledImage:
-        (attrs: {
-          src: string;
-          width: string;
-          caption: string;
-          centered: boolean;
-          cite: string;
-        }) =>
-        ({ commands }: any) => {
-          return commands.setNodeMarkup(this.name, attrs);
-        },
+      // setLabeledImage:
+      //   (attrs: {
+      //     src: string;
+      //     width: string;
+      //     caption: string;
+      //     centered: boolean;
+      //     cite: string;
+      //   }) =>
+      //   ({ tr}: CommandProps) => {
+      //     return tr.setNodeMarkup(this.name, attrs);
+      //   },
 
       deleteLabeledImage:
         () =>
-        ({ commands }: any) => {
-          return commands.deleteNode();
+        ({ commands }: CommandProps) => {
+          return commands.deleteNode(this.name);
         },
     };
   },

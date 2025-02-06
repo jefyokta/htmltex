@@ -39,7 +39,9 @@ export default class LatexVariable {
     );
   }
   static delete(key: string) {
-    this.variables =  Object.fromEntries( Object.entries(this.variables).filter(([k]) => k !== key));
+    this.variables = Object.fromEntries(
+      Object.entries(this.variables).filter(([k]) => k !== key),
+    );
   }
 
   static convertToLatex() {

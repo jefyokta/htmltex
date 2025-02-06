@@ -1,6 +1,27 @@
-import { Node } from "@tiptap/core";
+import { Mark, type CommandProps } from "@tiptap/core";
+type RefOption = {
+  ref: string;
+  type: "img" | "tab";
+};
 
-export const Ref = Node.create({
+declare module "@tiptap/core" {
+  interface Commands<ReturnType> {
+    ref: {
+      setRef: (attributes: RefOption) => ReturnType;
+
+      toggleRef: (attributes: {
+        href: string;
+        target?: string | null;
+        rel?: string | null;
+        class?: string | null;
+      }) => ReturnType;
+
+      unsetRef: () => ReturnType;
+    };
+  }
+}
+
+export const Ref = Mark.create<RefOption>({
   name: "ref",
   group: "block",
   content: "inline*",
@@ -15,18 +36,20 @@ export const Ref = Node.create({
   parseHTML() {
     return [
       {
-        tag: "a",
+        tag: "a[ref]",
+        getAttrs: (attr) => {
+          return false;
+        },
       },
     ];
   },
-  renderHTML({ node, HTMLAttributes }) {
-    return [
-      "a",
-      {
-        class: "ref",
-        ref: node.attrs.ref,
-      },
-      `[${node.attrs.ref}]`,
-    ];
+  addCommands(): any {
+    return {
+      setRef:
+        (attrs: RefOption) =>
+        ({ chain }: CommandProps) => {
+          return "";
+        },
+    };
   },
 });

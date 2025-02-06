@@ -9,8 +9,6 @@ export const getBibFromDoi = async (doiurl: string): Promise<Cite> => {
       },
     });
 
-    console.log(response);
-
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }

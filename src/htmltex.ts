@@ -1,4 +1,5 @@
 import { convertLatexToHtml, Begin, End } from "./converter";
+import type { FigureOptions } from "./tiptap-extensions";
 import { latexPlaceHolder, parseLatexPlaceHolder } from "./utils";
 export type NormalAttr = {
   color: string;
@@ -18,7 +19,7 @@ export type BracketBracesAttr = {
 };
 
 type HtmlConverterFunction = (
-  attrs: Record<string, string>,
+  attrs: Record<string, string> | any,
   content: string,
 ) => string;
 type HtmlMapping = Record<string, HtmlConverterFunction>;
@@ -101,26 +102,26 @@ const LatexConverter: ConverterMap = {
         options += `\\multirow{${attrs.rowspan}}{*}{\\textbf{${content}}}`;
       return options || `\\textbf{${content}} &`;
     },
-    figure: (attrs: any, content: any) => {
-      const alignment = attrs?.style?.match(/text-align:\s*([^;]+)/);
-      if (alignment) {
-        if (alignment[0] == "center") {
-          return `
-        \\begin{figure}
-        \\centering${content}
-        \\end{figure}
-        `;
-        }
-      }
+    figure: (attrs: FigureOptions, content: any) => {
+      const center = attrs?.centered;
       return `
-        \\begin{figure}
-        \\centering${content}\\end{figure}
+      \\begin{figure}
+      ${center ? "\\centering" : ""}
+      \\includegraphics[${attrs.width}]{${attrs.src}}
+      \\caption{${attrs.caption} ${attrs.cite ? `\\cite{${attrs.cite}}` : ""}}
+      \\end{figure}
       `;
     },
     katex: (_, content) => parseLatexPlaceHolder(content),
     cite: (attr, content) =>
       attr?.citeA ? `citeA{${attr.cite}}` : `cite${attr.cite}`,
     div: (attrs: any, content: any) => {
+      return `
+      \\begin{${attrs.be}}${attrs.braces ? `[${attrs.data.braces}]` : ""}${attrs.data.bracket ? `{${attrs.braces}}` : ""}
+      ${content}
+      \\end{${attrs.be}}
+      
+      `;
       if (attrs?.begin) {
         return `\\begin{${attrs?.content}}\n`;
       }
@@ -142,6 +143,9 @@ const LatexConverter: ConverterMap = {
       },
       sqrt: (attr: BracketBracesAttr) =>
         `<katex>${latexPlaceHolder(attr.match)}</katex>`,
+      begin: (attr: BracketBracesAttr) => {
+        return "";
+      },
     },
     braces: {},
     bracesbracket: {

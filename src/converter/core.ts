@@ -22,7 +22,9 @@ export const convertHtmlToLatex = (html: string): string => {
 
     if (node.type === "tag") {
       const element = node as Element;
-      const tagName = element.tagName.toLowerCase();
+      const tagName = element.tagName
+        .toLowerCase()
+        .replace(/-([a-z])/g, (_, char) => char.toUpperCase());
       const converter = LatexConverter.htmlToTex[tagName];
 
       if (!converter) {
@@ -44,11 +46,9 @@ export const convertLatexToHtml = (latex: string): string => {
   const latexPattern = /\\([a-z]+)(?:\{([^}]*)\}| ?(.+))?/g;
   const l = /\\([a-z]+)\{((?:[^{}]+|\{[^{}]*\})*)\}/g;
   const variablePattern = /\\([a-zA-Z0-9]+(?:[A-Z][a-z0-9]*)*)/g;
-  const beginEnd = /\\begin\{([a-zA-Z]+)\}([\s\S]*?)\\end\{\1\}/g;
+  const beginEnd =
+    /\\begin\{([a-zA-Z]+)\}(?:\[(.*?)\])?(?:\{([^}]*)\})?([\s\S]*?)\\end\{\1\}/g;
   const BracketBracesPattern = /\\([a-zA-Z]+)\[(.*?)\]\{(.*?)\}/g;
-  const figurePattern = /\\begin\{figure\}[\s\S]*?\\end\{figure\}/g;
-  const tablePattern =
-    /\\begin\{tabular\}{\{.*?\}}\\n\\hline[\s\S]*?\\end\{tabular\}/g;
 
   return latex
     .replace(variablePattern, (match, varname, ...others) => {
@@ -57,30 +57,6 @@ export const convertLatexToHtml = (latex: string): string => {
         return `<span var="${varname}">${value}</span>`;
       }
       return match;
-    })
-    .replace(tablePattern, (match, content) => {
-      const records = match[1];
-      return `<table record="${records}">
-                        ${content}
-            </table>`;
-    })
-    .replace(figurePattern, (match) => {
-      const figureContent = match.match(/\\includegraphics\[(.*?)\]\{(.*?)\}/);
-      const caption = match.match(/\\caption\{(.*?)\}/);
-      const centered = match.includes("\\centering");
-      const label = match.match(/\\label\{(.*?)\}/);
-
-      const imgWidth = figureContent
-        ? figureContent[1].replace(`=`, (match) => `:`)
-        : "";
-      const imgSrc = figureContent ? figureContent[2] : "";
-      const imgAlt = caption ? caption[1] : "Figure";
-
-      return `<figure ${centered ? CenteredLabeledImage : ""} ${label ? `id="${label[1]}"` : ""}>
-            <img src="${imgSrc}"  ${imgWidth ? `style="${imgWidth};"` : ""} />
-            ${caption ? `<figcaption>${imgAlt}</figcaption>` : ""}
-          </figure>
-        `;
     })
     .replace(
       BracketBracesPattern,
@@ -91,6 +67,18 @@ export const convertLatexToHtml = (latex: string): string => {
         }
 
         return match;
+      },
+    )
+    .replace(
+      beginEnd,
+      (match, command, braces, bracket, content, ...others) => {
+        return new BeginEndConverter()._call(command, {
+          command,
+          braces,
+          bracket,
+          content,
+          match,
+        } as BeginEndParams);
       },
     )
     .replace(l, (match, command, content, text, num, raw, ...others) => {
@@ -136,12 +124,5 @@ export const convertLatexToHtml = (latex: string): string => {
 
         return match;
       },
-    )
-    .replace(beginEnd, (match, command, content, ...others) => {
-      return new BeginEndConverter()._call(command, {
-        command,
-        content,
-        match,
-      } as BeginEndParams);
-    });
+    );
 };

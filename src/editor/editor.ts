@@ -1,12 +1,16 @@
 import { handleFigureCaption, reRenderKatex } from "../actions";
 import { Editor as TipTapEditor, type EditorEvents } from "@tiptap/core";
-import { Cite, LabeledImage } from "../tiptap-extensions";
+import { Cite, Figure } from "../tiptap-extensions";
 import { style as s } from "../../dist/style";
 import StarterKit from "@tiptap/starter-kit";
 import { convertHtmlToLatex, convertLatexToHtml } from "../converter";
 import { Listener } from "../events/listener";
 import { TexVarExtension } from "../tiptap-extensions/var";
 import { VarConverter } from "../tiptap-extensions/var-converter";
+import TexTable from "../tiptap-extensions/table";
+import TableCell from "@tiptap/extension-table-cell";
+import TableRow from "@tiptap/extension-table-row";
+import TableHeader from "@tiptap/extension-table-header";
 
 type EditorOptions = {
   element: HTMLElement | null;
@@ -36,11 +40,15 @@ export default class Editor {
     this.editor = new TipTapEditor({
       element: page,
       extensions: [
-        LabeledImage,
         StarterKit,
         TexVarExtension,
         VarConverter,
         Cite,
+        TexTable,
+        TableCell,
+        TableRow,
+        TableHeader,
+        Figure,
       ],
       content: this.options.content,
       editable: true,

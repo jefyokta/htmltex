@@ -32,8 +32,25 @@ export const VarConverter = Extension.create({
           }
           return false;
         }
-
         return false;
+      },
+      "}": ({ editor }) => {
+        const { state, dispatch } = editor.view;
+        const { tr, selection } = state;
+        const textBefore = tr.doc.textBetween(
+          selection.from - 20,
+          selection.from,
+          "",
+        );
+
+        const imagesc = textBefore.match(/@img{([a-zA-Z0-9_]+)}/);
+        if (imagesc) {
+        }
+        const tablesc = textBefore.match(/@tab{([a-zA-Z0-9_]+)}/);
+        if (tablesc) {
+        }
+
+        return true;
       },
     };
   },

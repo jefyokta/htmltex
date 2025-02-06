@@ -1,5 +1,8 @@
-import { Node } from "@tiptap/core";
-export const MathTex = Node.create({
+import { mergeAttributes, Node } from "@tiptap/core";
+import { latexPlaceHolder, parseLatexPlaceHolder } from "../utils";
+
+type KatexOption = { content: string };
+export const MathTex = Node.create<KatexOption>({
   name: "katex",
   group: "block",
   content: "inline*",
@@ -8,22 +11,31 @@ export const MathTex = Node.create({
   parseHTML() {
     return [
       {
-        tag: "katex",
+        tag: "x-katex",
+        getAttrs(node): KatexOption {
+          return {
+            content: latexPlaceHolder(node.getAttribute("content") || ""),
+          };
+        },
       },
     ];
   },
   renderHTML({ node, HTMLAttributes }) {
-    return ["katex", HTMLAttributes, node.content.content];
+    return [
+      "x-katex",
+      mergeAttributes(HTMLAttributes, node.attrs.content),
+      parseLatexPlaceHolder(node.attrs.content),
+    ];
   },
   addCommands(): Partial<any> {
     return {
       insertKatex:
-        (latex: string) =>
+        (attrs: KatexOption) =>
         ({ command }: any) => {
           return command.insertContent({
             type: this.name,
-            attrs: [],
-            content: latex,
+            attrs,
+            content: parseLatexPlaceHolder(attrs.content),
           });
         },
     };
