@@ -115,25 +115,25 @@ const LatexConverter: ConverterMap = {
     katex: (_, content) => parseLatexPlaceHolder(content),
     cite: (attr, content) =>
       attr?.citeA ? `citeA{${attr.cite}}` : `cite${attr.cite}`,
-    div: (attrs: any, content: any) => {
-      return `
-      \\begin{${attrs.be}}${attrs.braces ? `[${attrs.data.braces}]` : ""}${attrs.data.bracket ? `{${attrs.braces}}` : ""}
-      ${content}
-      \\end{${attrs.be}}
+    // div: (attrs: any, content: any) => {
+    //   return `
+    //   \\begin{${attrs.be}}${attrs.braces ? `[${attrs.data.braces}]` : ""}${attrs.data.bracket ? `{${attrs.braces}}` : ""}
+    //   ${content}
+    //   \\end{${attrs.be}}
       
-      `;
-      if (attrs?.begin) {
-        return `\\begin{${attrs?.content}}\n`;
-      }
-      if (attrs?.end) {
-        return `\\end{${attrs?.content}}\n`;
-      }
-      if (attrs?.tex) {
-        return attrs.tex;
-      }
+    //   `;
+    //   if (attrs?.begin) {
+    //     return `\\begin{${attrs?.content}}\n`;
+    //   }
+    //   if (attrs?.end) {
+    //     return `\\end{${attrs?.content}}\n`;
+    //   }
+    //   if (attrs?.tex) {
+    //     return attrs.tex;
+    //   }
 
-      return "";
-    },
+    //   return "";
+    // },
   },
   texToHtml: {
     bracketbraces: {

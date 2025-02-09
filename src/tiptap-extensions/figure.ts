@@ -19,7 +19,7 @@ export const Figure = Node.create<FigureOptions>({
   content: "inline*",
 
   defining: true,
-
+  isolating:true,
   draggable: true,
   atom: true,
 
@@ -86,22 +86,23 @@ export const Figure = Node.create<FigureOptions>({
       [
         "img",
         {
-          src,
-          style: `width:${width}`,
+          src:src,
+          style: `${width}`,
         },
       ],
       [
         "figcaption",
         {
-          content: `${caption}${ct ? new CiteUtils(ct).toCite() : ""}`,
-        },
+          content: `${caption} ${ct ? new CiteUtils(ct).toCite() : ""}`,
+          
+        },caption
       ],
     ];
   },
 
   addCommands(): Partial<any> {
     return {
-      insertLabeledImage:
+      setLabeledImage:
         (attrs: {
           src: string;
           width: string;
@@ -109,29 +110,14 @@ export const Figure = Node.create<FigureOptions>({
           centered: boolean;
           cite: string;
         }) =>
-        ({ commands }: CommandProps) => {
-          return commands.insertContent({
-            type: this.name,
-            attrs,
-            content: [{ type: "text", text: attrs.caption }],
-          });
+        ({ commands}: CommandProps) => {
+          return commands.updateAttributes(this.name, attrs);
         },
-
-      // setLabeledImage:
-      //   (attrs: {
-      //     src: string;
-      //     width: string;
-      //     caption: string;
-      //     centered: boolean;
-      //     cite: string;
-      //   }) =>
-      //   ({ tr}: CommandProps) => {
-      //     return tr.setNodeMarkup(this.name, attrs);
-      //   },
 
       deleteLabeledImage:
         () =>
-        ({ commands }: CommandProps) => {
+        ({ commands,editor }: CommandProps) => {
+        
           return commands.deleteNode(this.name);
         },
     };

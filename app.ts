@@ -86,7 +86,11 @@ Perkembangan teknologi informasi dan komunikasi di Indonesia semakin pesat, dan 
 \\par Perumahan merupakan salah satu kebutuhan utama manusia yang harus di penuhi di samping pangan dan sandang, artinya setiap orang sangat memerlukan tempat tinggal atau rumah untuk berteduh dari panas dan hujan.rumah adalah bangunan yang berfungsi sebagai tempat tinggal atau hunian dan sarana pembinaan keluarga sedangkan perumahan adalah kelompok rumah yang berfungsi sebagai lingkungan tempat tinggal atau lingkungan hunian yang dilengkapi dengan sarana dan prasarana dan permukiman adalah bagian dari lingkungan hidup di luar kawasan lindung, baik berupa kawasan perkotaan maupun perdesaan yang berfungsi sebagai tempat tinggal atau hunian dan tempat kegiatan yang mendukung perikehidupan dan penghidupan (UU no. 4 tahun 1992 tentang perumahan dan pemukiman,pasal 1 ayat 2).
 \\par Perumahan Kamela Permai merupakan sebuah perumahan yang berada di Kabupaten Kuantan Singingi. Berdasarkan observasi langsung oleh peneliti di Perumahan Kamela Permai Bangkinang Bersama Agusman, S.E selaku Kepala Cabang, pemesanan perumahan masih dilakukan secara manual dan harus mendatangi kantor  marketing untuk mendapatkan syarat-syarat pemesanan.. Hal ini menyebabkan calon pelanggan yang jauh dari lokasi perumahan sulit untuk mengetahui dan melakukan pemesanan. Oleh karena itu, diperlukan sistem informasi pemesanan perumahan agar pemesananan dapat menjangkau calon pelanggan lebih luas dan lebih mudah. Selain itu sistem informasi ini juga menyimpanan dokumen yang dipelukan untuk pemesanan hingga dapat dicari dengan mudah oleh marketing.
 \\par Dari uraian tersebut, penulis tertarik untuk membangun sebuah sistem informasi pemesanan perumahan  sehingga permasalahan yang dihadapi dapat diselesaikan. Oleh karena itu, penulis mengangkatnya menjadi materi Laporan Kerja Praktek dengan judul “Rancang Bangun Sistem Informasi Pemesanan Perumahan” yang diharapkan dapat mempermudah proses pemesanan perumahan di Perumahan Kamea Permai.
-
+\\begin{figure}
+\\centering
+    \\includegraphics[width=90]{test.jpg}
+\\caption{contoh gambar}
+\\end{figure}
 \\section{Rumusan Masalah}
 Berdasarkan uraian latar belakang di atas, dapat dirumuskan permasalahannya yaitu “Bagaimana merancang dan membangun Bangun Sistem Informasi Pemesanan Perumahan di Perumahan Kamela Permai”?
 
@@ -155,3 +159,4 @@ const t = {
 }}
 
 window.t =t
+console.log(editor.getLatex());

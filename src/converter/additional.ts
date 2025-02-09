@@ -104,10 +104,12 @@ export class BeginEndConverter extends BaseConverter {
     const imgWidth = figureContent
       ? figureContent[1].replace(`=`, () => `:`)
       : "";
+      console.log({args,figureContent});
+      
     const imgSrc = figureContent ? figureContent[2] : "";
     const imgAlt = caption ? caption[1] : "Figure";
 
-    return `<figure centered label="" src="" caption=""></figure>`;
+    return `<figure ${centered ? "centered=true":""} label="${label}" src="${imgSrc}" width="${imgWidth}" caption="${imgAlt}"></figure>`;
 
     // return `<figure ${centered ? CenteredLabeledImage : ""} ${label ? `label="${label[1]}"` : ""}>
     //             <img src="${imgSrc}"  ${imgWidth ? `style="${imgWidth};"` : ""} />

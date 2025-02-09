@@ -59,17 +59,6 @@ export const convertLatexToHtml = (latex: string): string => {
       return match;
     })
     .replace(
-      BracketBracesPattern,
-      (match, command, bracket, braces, num, raw, ...others) => {
-        const converter = LatexConverter.texToHtml.bracketbraces[command];
-        if (converter) {
-          return converter({ match, braces, bracket });
-        }
-
-        return match;
-      },
-    )
-    .replace(
       beginEnd,
       (match, command, braces, bracket, content, ...others) => {
         return new BeginEndConverter()._call(command, {
@@ -81,6 +70,18 @@ export const convertLatexToHtml = (latex: string): string => {
         } as BeginEndParams);
       },
     )
+    .replace(
+      BracketBracesPattern,
+      (match, command, bracket, braces, num, raw, ...others) => {
+        const converter = LatexConverter.texToHtml.bracketbraces[command];
+        if (converter) {
+          return converter({ match, braces, bracket });
+        }
+
+        return match;
+      },
+    )
+
     .replace(l, (match, command, content, text, num, raw, ...others) => {
       const converter = LatexConverter.texToHtml.bracesbracket[command];
       if (converter) {
