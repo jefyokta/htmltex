@@ -176,3 +176,6 @@ out
 test.jpg 
 index.html
 .vscode/
+
+vendor/
+index.php
