@@ -1,0 +1,6 @@
+node_modules/
+vendor/
+storage/views/*.php
+public/build
+public/vite-okta
+swoole.pid

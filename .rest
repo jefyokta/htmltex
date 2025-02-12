@@ -1,0 +1,47 @@
+POST https://repository.uin-suska.ac.id/cgi/users/login HTTP/1.1
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-US,en;q=0.9,id;q=0.8
+Cache-Control: max-age=0
+Connection: keep-alive
+Content-Length: 800
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundarymctkrGkjxAy05cqy
+Cookie: sc_is_visitor_unique=rx12917893.1720501083.FC62999F95E34FE09FF82A54B9B518A6.1.1.1.1.1.1.1.1.1; _ga_GY8Y4SM3N1=GS1.1.1720501083.1.1.1720501577.0.0.0; _ga_V0HRMH068W=GS1.1.1720500378.1.1.1720501632.0.0.0; _ga_QZJX8CVSM5=GS1.3.1734448418.4.0.1734448418.0.0.0; __dtsu=4C30173624162545FC466B61A47F4D34; _cc_id=2175a98155f98caf29a5e5b0d8ff6685; _ga_2K0Q2WTER6=GS1.1.1736241750.1.1.1736241845.0.0.0; _ga_6GHQML1FEH=GS1.1.1738841094.226.1.1738841330.0.0.0; panoramaId_expiry=1739622749746; panoramaId=9f76fddda16dfea7c6b325538f0c16d53938bea22e0ea71f68c36bc8b5d0e2f8; panoramaIdType=panoIndiv; _ga=GA1.1.920608991.1703009687; sc_is_visitor_unique=rx12464371.1739112711.9CC97F90D6534F7EFBF93AC0717432AD.5.5.5.5.5.5.5.4.4; _ga_XHSFPFKN2Q=GS1.1.1739112707.5.1.1739112725.0.0.0
+Host: repository.uin-suska.ac.id
+Origin: https://repository.uin-suska.ac.id
+Referer: https://repository.uin-suska.ac.id/cgi/users/login
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "macOS"
+
+------WebKitFormBoundarymctkrGkjxAy05cqy
+Content-Disposition: form-data; name="screen"
+
+Login::Internal
+------WebKitFormBoundarymctkrGkjxAy05cqy
+Content-Disposition: form-data; name="login_params"
+
+target=https%3A%2F%2Frepository.uin-suska.ac.id%2Fcgi%2Fusers%2Fbin%2Fphp
+------WebKitFormBoundarymctkrGkjxAy05cqy
+Content-Disposition: form-data; name="target"
+
+https://repository.uin-suska.ac.id/cgi/users/bin/php
+------WebKitFormBoundarymctkrGkjxAy05cqy
+Content-Disposition: form-data; name="login_username"
+
+jefyokta_
+------WebKitFormBoundarymctkrGkjxAy05cqy
+Content-Disposition: form-data; name="login_password"
+
+Reddevils10!
+------WebKitFormBoundarymctkrGkjxAy05cqy
+Content-Disposition: form-data; name="_action_login"
+
+Login
+------WebKitFormBoundarymctkrGkjxAy05cqy--

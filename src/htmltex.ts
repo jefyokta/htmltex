@@ -41,16 +41,16 @@ type ConverterMap = {
 
 const LatexConverter: ConverterMap = {
   htmlToTex: {
-    h1: (_: any, content: string) => `\\chapter{${content}}`,
-    h2: (_: any, content: string) => `\\section{${content}}`,
-    h3: (_: any, content: string) => `\\subsection{${content}}`,
+    // h1: (_: any, content: string) => `\\chapter{${content}}`,
+    h2: (_: any, content: string) => `\\section{${content}}\n`,
+    h3: (_: any, content: string) => `\\subsection{${content}}\n`,
     h4: (_: any, content: string) => `\\subsubsection{${content}}`,
     h5: (_: any, content: string) => `\\paragraph{${content}}`,
     h6: (_: any, content: string) => `\\subparagraph{${content}}`,
     b: (_: any, content: string) => `\\textbf{${content}}`,
     i: (_: any, content: string) => `\\textit{${content}}`,
     u: (_: any, content: string) => `\\underline{${content}}`,
-    p: (_: any, content: string) => `\\par ${content}`,
+    p: (_: any, content: string) => `\\par ${content}\n\n`,
     span: (attrs: any, content: any) => {
       //texvariable
       if (attrs.var) {
@@ -65,7 +65,7 @@ const LatexConverter: ConverterMap = {
       `\\begin{itemize}${content} \\end{itemize}`,
     ol: (_: any, content: string) =>
       `\\begin{enumerate}${content} \\end{enumerate}`,
-    li: (_: any, content: string) => `\\item ${content}`,
+    li: (_: any, content: string) => `\n \\item ${content} \n`,
     img: (attrs: any) => {
       return `\\includegraphics[width=${attrs.width || "0.5\\textwidth"}]{${attrs.src}}`;
     },
@@ -120,7 +120,7 @@ const LatexConverter: ConverterMap = {
     //   \\begin{${attrs.be}}${attrs.braces ? `[${attrs.data.braces}]` : ""}${attrs.data.bracket ? `{${attrs.braces}}` : ""}
     //   ${content}
     //   \\end{${attrs.be}}
-      
+
     //   `;
     //   if (attrs?.begin) {
     //     return `\\begin{${attrs?.content}}\n`;

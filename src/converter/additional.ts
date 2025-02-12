@@ -62,10 +62,6 @@ export class UserBeginEndConverter {
 }
 
 export class BeginEndConverter extends BaseConverter {
-  private toKatex(match: string) {
-    const katexContent = latexPlaceHolder(match);
-    return `<katex>${katexContent}</katex>`;
-  }
 
   private toTable(args: BeginEndParams) {
     const { content } = args;
@@ -82,19 +78,12 @@ export class BeginEndConverter extends BaseConverter {
     return `<div be="center" style="text-align:center !important;">${args.content}</div>`;
   }
 
-  matrix(args: BeginEndParams) {
-    return this.toKatex(args.match);
-  }
-  pmatrix(args: BeginEndParams) {
-    return this.toKatex(args.match);
-  }
   tabular(args: BeginEndParams) {
     return this.toTable(args);
   }
   longtable(args: BeginEndParams) {
     return this.toTable(args);
   }
-  align(args: BeginEndParams) {}
   figure(args: BeginEndParams) {
     const match = args.content;
     const figureContent = match.match(/\\includegraphics\[(.*?)\]\{(.*?)\}/);
@@ -104,12 +93,12 @@ export class BeginEndConverter extends BaseConverter {
     const imgWidth = figureContent
       ? figureContent[1].replace(`=`, () => `:`)
       : "";
-      console.log({args,figureContent});
-      
+    console.log({ args, figureContent });
+
     const imgSrc = figureContent ? figureContent[2] : "";
     const imgAlt = caption ? caption[1] : "Figure";
 
-    return `<figure ${centered ? "centered=true":""} label="${label}" src="${imgSrc}" width="${imgWidth}" caption="${imgAlt}"></figure>`;
+    return `<figure ${centered ? "centered=true" : ""} label="${label}" src="${imgSrc}" width="${imgWidth}" caption="${imgAlt}"></figure>`;
 
     // return `<figure ${centered ? CenteredLabeledImage : ""} ${label ? `label="${label[1]}"` : ""}>
     //             <img src="${imgSrc}"  ${imgWidth ? `style="${imgWidth};"` : ""} />

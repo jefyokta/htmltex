@@ -1,5 +1,5 @@
-import Document from "@tiptap/extension-document"; 
+import Document from "@tiptap/extension-document";
 
-export const PageDocument  = Document.extend({
-    content:"page block*"
-})
+export const PageDocument = Document.extend({
+  content: "page block*",
+});

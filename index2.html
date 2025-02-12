@@ -7,7 +7,31 @@
 </head>
 <body>
 
+  <table style="width: 600px; table-layout: fixed; border-collapse: collapse;" border="1">
+    <colgroup>
+      <col style="width: 200px;">
+      <col style="width: 300px;">
+      <col style="width: 100px;">
+    </colgroup>
+    <tr>
+      <th>Kolom 1</th>
+      <th>Kolom 2</th>
+      <th>Kolom 3</th>
+    </tr>
+    <tr>
+      <td>Data 1</td>
+      <td>Data 2</td>
+      <td>Data 3</td>
+    </tr>
+  </table>
+
+  <form action="http://127.0.0.1:3000/dompdf" method="post">
+    <input type="text" name="html" value="<h1>Empty Content</h1>">
+    <button type="submit">sada</button>
+  </form>
+
   <script src="test.js"></script>
+  
   
 </body>
 </html>

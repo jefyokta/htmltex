@@ -16,10 +16,10 @@ export const Figure = Node.create<FigureOptions>({
 
   group: "block",
 
-  content: "inline*",
+  content: "block figcaption",
 
   defining: true,
-  isolating:true,
+  isolating: true,
   draggable: true,
   atom: true,
 
@@ -86,7 +86,7 @@ export const Figure = Node.create<FigureOptions>({
       [
         "img",
         {
-          src:src,
+          src: src,
           style: `${width}`,
         },
       ],
@@ -94,8 +94,8 @@ export const Figure = Node.create<FigureOptions>({
         "figcaption",
         {
           content: `${caption} ${ct ? new CiteUtils(ct).toCite() : ""}`,
-          
-        },caption
+        },
+        caption,
       ],
     ];
   },
@@ -110,14 +110,13 @@ export const Figure = Node.create<FigureOptions>({
           centered: boolean;
           cite: string;
         }) =>
-        ({ commands}: CommandProps) => {
+        ({ commands }: CommandProps) => {
           return commands.updateAttributes(this.name, attrs);
         },
 
       deleteLabeledImage:
         () =>
-        ({ commands,editor }: CommandProps) => {
-        
+        ({ commands, editor }: CommandProps) => {
           return commands.deleteNode(this.name);
         },
     };

@@ -1,0 +1,6 @@
+{
+    "require": {
+        "jefyokta/oktaax": "^2.3",
+        "dompdf/dompdf": "^3.1"
+    }
+}

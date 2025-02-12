@@ -14,8 +14,8 @@ const TexTable = Table.extend<TableOptions, TexTableOptions>({
     return {
       ...this.parent?.(),
       cells: {
-        default: "c|c|c",
-        parseHTML: (element) => element.getAttribute("cells") || "c|c|c",
+        default: "|c|c|c|",
+        parseHTML: (element) => element.getAttribute("cells") || "|c|c|c|",
         renderHTML: (attributes) => ({ cells: attributes.cells }),
       },
       caption: {
@@ -52,7 +52,7 @@ const TexTable = Table.extend<TableOptions, TexTableOptions>({
         tag: "table",
         getAttrs: (element) => ({
           type: element.getAttribute("type") || "longtable",
-          cells: element.getAttribute("cells") || "c|c|c",
+          cells: element.getAttribute("cells") || "|c|c|c|",
           caption: element.querySelector("caption")?.textContent || "",
           label: element.getAttribute("label") || "",
           option: element.getAttribute("option") || "c",
@@ -63,19 +63,12 @@ const TexTable = Table.extend<TableOptions, TexTableOptions>({
   },
 
   renderHTML({ node }) {
-    const cellStyles = node.attrs.cells.split("|").map((cell: string) => {
-      node.attrs.caption ? ["caption", {}, node.attrs.caption] : undefined;
-      if (cell.startsWith("p")) {
-        return {
-          style: `text-align: justify; width: ${cell.match(/\d+/)?.[0] || "auto"}cm;`,
-        };
-      }
-      if (cell === "c") return { style: "text-align: center;" };
-      if (cell === "l") return { style: "text-align: left;" };
-      if (cell === "r") return { style: "text-align: right;" };
-      return {};
-    });
+    const cellStyles = node.attrs.cells
+      .split("|")
+      .filter((r: string) => r.trim().length > 0);
+
     const caption = node.attrs.caption;
+
     return [
       "table",
       {
@@ -84,20 +77,13 @@ const TexTable = Table.extend<TableOptions, TexTableOptions>({
         label: node.attrs.label,
         option: node.attrs.option,
       },
-      ...(caption ? [caption] : []),
+      ...(caption ? [["caption", {}, caption]] : []),
       [
-        "tbody",
+        "colgroup",
         {},
-        [
-          "tr",
-          {},
-          ...cellStyles.map((style: any) => [
-            "td",
-            style,
-            [["paragraph", {}, []]],
-          ]),
-        ],
-      ],
+        ...cellStyles.map((r: string) => ["col", { style: "" }]),
+      ], //incomplete
+      ["tbody", {}, ["tr", {}, ...cellStyles.map(() => ["td", {}, 0])]],
     ];
   },
 
@@ -113,7 +99,7 @@ const TexTable = Table.extend<TableOptions, TexTableOptions>({
               type: this.name,
               attrs: {
                 type: options.type || "longtable",
-                cells: options.cells || "c|c|c",
+                cells: options.cells || "|c|c|c|",
                 caption: options.caption || "",
                 label: options.label || "",
                 option: options.option || "c",

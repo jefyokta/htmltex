@@ -1,4 +1,3 @@
-import { KatexComponents } from "./components/katex";
 
 const escapeLatex = (text: string): string => {
   return text
@@ -24,9 +23,7 @@ export const latexPlaceHolder = (latex: string) => {
 export const parseLatexPlaceHolder = (placeholder: string) =>
   placeholder.replace(/_tex\.bs\.(\w+)/g, "\\$1");
 
-export const createKatexElement = () => {
-  customElements.define("katex", KatexComponents);
-};
+
 
 export const CenteredLabeledImage: string =
   "display:flex;flex-direction:column;align-items:center;";

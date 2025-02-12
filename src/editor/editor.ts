@@ -24,10 +24,12 @@ import CodeBlock from "@tiptap/extension-code-block";
 import Bold from "@tiptap/extension-bold";
 import Italic from "@tiptap/extension-italic";
 import Strike from "@tiptap/extension-strike";
-import { PageDocument } from "../tiptap-extensions/document";
-import { Page } from "../tiptap-extensions/page";
 import Image from "@tiptap/extension-image";
 import Dropcursor from "@tiptap/extension-dropcursor";
+import { FigCaption } from "../tiptap-extensions/figcaption";
+import { MyHeadings } from "../tiptap-extensions/my-headings";
+import Document from "@tiptap/extension-document";
+import { updatePagination } from "../actions/pages";
 
 type EditorOptions = {
   element: HTMLElement | null;
@@ -50,17 +52,16 @@ export default class Editor {
 
   private handleTipTapEditor() {
     const page = document.createElement("div");
-    // page.classList.add("page");
+    page.classList.add("page");
     page.id = "page";
-    page.style.overflowY = "auto"
+    page.style.overflowY = "auto";
     this.options.element?.append(page);
 
     this.editor = new TipTapEditor({
       element: page,
       extensions: [
         // StarterKit,
-        PageDocument,
-        Page,
+        Document,
         Paragraph,
         TexVarExtension,
         VarConverter,
@@ -71,7 +72,7 @@ export default class Editor {
         TableHeader,
         Figure,
         Text,
-        Heading,
+        MyHeadings,
         ListItem,
         HardBreak,
         OrderedList,
@@ -84,11 +85,27 @@ export default class Editor {
         Italic,
         Strike,
         Image,
-        Dropcursor
+        Dropcursor,
+        FigCaption
       ],
-        content: this.options.content,
+      content: this.options.content,
       editable: true,
     });
+    this.editor.on('create',()=>{
+      if (document.querySelector('tiptap')) {
+        console.log(document.querySelector('tiptap'));
+        
+        
+        updatePagination(document.querySelector('tiptap') as HTMLElement)
+      }
+    })
+    this.editor.on("update",()=>{
+      if (document.querySelector('tiptap')) {
+        
+        // updatePagination(document.querySelector('tiptap') as HTMLElement)
+      }
+
+    })
     return this;
   }
 
@@ -143,7 +160,10 @@ export default class Editor {
   public getEditor() {
     return this.editor;
   }
+
+  public getJson() {
+
+    return this.editor?.getJSON()
+    
+  }
 }
-
-
-

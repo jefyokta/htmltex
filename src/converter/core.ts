@@ -1,7 +1,6 @@
 import { Parser } from "htmlparser2";
 import { DomHandler, Element, Text, Node } from "domhandler";
 import { LatexConverter, type NormalAttr } from "../htmltex";
-import { CenteredLabeledImage } from "../utils";
 import LatexVariable from "./tex-variable";
 import { BeginEndConverter, type BeginEndParams } from "./additional";
 
@@ -43,6 +42,8 @@ export const convertHtmlToLatex = (html: string): string => {
 };
 
 export const convertLatexToHtml = (latex: string): string => {
+  const inlineMathPattern = /(?<!\w)\$(.+?)\$(?!\w)/g;
+  const blockMathPattern = /^\s*\$\$(.*?)\$\$/gms;
   const latexPattern = /\\([a-z]+)(?:\{([^}]*)\}| ?(.+))?/g;
   const l = /\\([a-z]+)\{((?:[^{}]+|\{[^{}]*\})*)\}/g;
   const variablePattern = /\\([a-zA-Z0-9]+(?:[A-Z][a-z0-9]*)*)/g;
@@ -51,6 +52,14 @@ export const convertLatexToHtml = (latex: string): string => {
   const BracketBracesPattern = /\\([a-zA-Z]+)\[(.*?)\]\{(.*?)\}/g;
 
   return latex
+  .replace(blockMathPattern,(match,content,...args)=>{
+
+    return `<x-math-block content="${content}"></x-math-block>`
+  })
+    .replace(inlineMathPattern,(match,content,...args)=>{      
+      return `<x-math-inline content="${content}"></x-math-inline>`
+    })
+
     .replace(variablePattern, (match, varname, ...others) => {
       const value = LatexVariable.get(varname);
       if (typeof value === "string") {

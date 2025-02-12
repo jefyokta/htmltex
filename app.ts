@@ -149,7 +149,7 @@ Bab ini berisikan kesimpulan mengenai hasil dari perancangan aplikasi yang telah
 const editor =  new Editor({element:document.getElementById('container')||null,content:htmlToTex})
 
 
-window.editor = editor.getEditor()
+window.editor = editor
 
 
 const t = {
@@ -158,5 +158,22 @@ const t = {
     
 }}
 
-window.t =t
-console.log(editor.getLatex());
+const kon = ()=>{
+
+  fetch('http://127.0.0.1:3000/', {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "Access-Control-Allow-Origin": "*"
+    },
+    mode:"no-cors",
+    body: JSON.stringify({
+     json:window.editor.getJson()
+    })
+  }).then(response => response.text())
+    .then(result => console.log(result))
+    .catch(error => console.error('Error:', error));
+
+}  
+window.kon = kon
+// console.log(editor.getJson());

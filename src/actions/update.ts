@@ -1,6 +1,1 @@
-
-
-document.querySelectorAll('figure').forEach((el)=>{
-
-
-})
+document.querySelectorAll("figure").forEach((el) => {});

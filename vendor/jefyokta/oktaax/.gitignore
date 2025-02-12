@@ -1,0 +1,13 @@
+
+vendor/
+log
+/index.php
+/views/
+/public
+.DS_Store
+node_modules/
+test/
+test2/
+index.html
+test.mp4
+watermark
