@@ -10,6 +10,7 @@ export type FigureOptions = {
   centered: boolean;
   cite?: string | undefined;
   label: string;
+  comments?: string;
 };
 export const Figure = Node.create<FigureOptions>({
   name: "figure",
@@ -38,6 +39,9 @@ export const Figure = Node.create<FigureOptions>({
         default: false,
       },
       cite: {
+        default: "",
+      },
+      comments: {
         default: "",
       },
     };

@@ -23,11 +23,7 @@ export class CiteLocalStorage implements CiteStorage {
 
   get(key: string) {
     const cites = this.getAll();
-    // console.log(cites);
-    console.log(key);
-
     const c = cites.find((cite) => cite.id === key) || undefined;
-    console.log(c);
 
     return c;
   }

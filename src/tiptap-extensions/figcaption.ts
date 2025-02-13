@@ -13,7 +13,7 @@ export const FigCaption = Node.create<FigCaptionProps>({
   selectable: false,
   draggable: false,
   atom: false,
-  renderHTML({ node,HTMLAttributes }) {
-    return ["figcaption", HTMLAttributes,node.attrs.content ];
+  renderHTML({ node, HTMLAttributes }) {
+    return ["figcaption", HTMLAttributes, node.attrs.content];
   },
 });

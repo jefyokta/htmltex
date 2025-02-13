@@ -62,7 +62,6 @@ export class UserBeginEndConverter {
 }
 
 export class BeginEndConverter extends BaseConverter {
-
   private toTable(args: BeginEndParams) {
     const { content } = args;
 

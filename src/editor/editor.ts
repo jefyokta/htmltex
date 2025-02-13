@@ -29,7 +29,8 @@ import Dropcursor from "@tiptap/extension-dropcursor";
 import { FigCaption } from "../tiptap-extensions/figcaption";
 import { MyHeadings } from "../tiptap-extensions/my-headings";
 import Document from "@tiptap/extension-document";
-import { updatePagination } from "../actions/pages";
+import { paginate } from "../actions/pages";
+import PageBreak from "../tiptap-extensions/page-break";
 
 type EditorOptions = {
   element: HTMLElement | null;
@@ -54,13 +55,14 @@ export default class Editor {
     const page = document.createElement("div");
     page.classList.add("page");
     page.id = "page";
-    page.style.overflowY = "auto";
+    // page.style.overflowY = "auto";
     this.options.element?.append(page);
 
     this.editor = new TipTapEditor({
       element: page,
       extensions: [
         // StarterKit,
+        // Pagination,
         Document,
         Paragraph,
         TexVarExtension,
@@ -72,7 +74,7 @@ export default class Editor {
         TableHeader,
         Figure,
         Text,
-        MyHeadings,
+        // MyHeadings,
         ListItem,
         HardBreak,
         OrderedList,
@@ -86,26 +88,23 @@ export default class Editor {
         Strike,
         Image,
         Dropcursor,
-        FigCaption
+        FigCaption,
+        Heading,
+        PageBreak,
       ],
       content: this.options.content,
       editable: true,
     });
-    this.editor.on('create',()=>{
-      if (document.querySelector('tiptap')) {
-        console.log(document.querySelector('tiptap'));
-        
-        
-        updatePagination(document.querySelector('tiptap') as HTMLElement)
+    this.editor.on("create", () => {
+      if (document.querySelector("tiptap")) {
       }
-    })
-    this.editor.on("update",()=>{
-      if (document.querySelector('tiptap')) {
-        
+    });
+    this.editor.on("update", () => {
+      if (document.querySelector("tiptap")) {
         // updatePagination(document.querySelector('tiptap') as HTMLElement)
       }
-
-    })
+    });
+    this.editor.on("update", () => paginate(this.editor));
     return this;
   }
 
@@ -162,8 +161,6 @@ export default class Editor {
   }
 
   public getJson() {
-
-    return this.editor?.getJSON()
-    
+    return this.editor?.getJSON();
   }
 }

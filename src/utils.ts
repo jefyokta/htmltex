@@ -1,4 +1,3 @@
-
 const escapeLatex = (text: string): string => {
   return text
     .replace(/\\/g, "\\textbackslash ")
@@ -22,8 +21,6 @@ export const latexPlaceHolder = (latex: string) => {
 
 export const parseLatexPlaceHolder = (placeholder: string) =>
   placeholder.replace(/_tex\.bs\.(\w+)/g, "\\$1");
-
-
 
 export const CenteredLabeledImage: string =
   "display:flex;flex-direction:column;align-items:center;";

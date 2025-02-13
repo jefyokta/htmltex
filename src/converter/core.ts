@@ -52,12 +52,11 @@ export const convertLatexToHtml = (latex: string): string => {
   const BracketBracesPattern = /\\([a-zA-Z]+)\[(.*?)\]\{(.*?)\}/g;
 
   return latex
-  .replace(blockMathPattern,(match,content,...args)=>{
-
-    return `<x-math-block content="${content}"></x-math-block>`
-  })
-    .replace(inlineMathPattern,(match,content,...args)=>{      
-      return `<x-math-inline content="${content}"></x-math-inline>`
+    .replace(blockMathPattern, (match, content, ...args) => {
+      return `<x-math-block content="${content}"></x-math-block>`;
+    })
+    .replace(inlineMathPattern, (match, content, ...args) => {
+      return `<x-math-inline content="${content}"></x-math-inline>`;
     })
 
     .replace(variablePattern, (match, varname, ...others) => {

@@ -1,13 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id-ID">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+
   <title>Document</title>
 </head>
 <body>
+  <p class="hyphens-auto hypens-auto w-1/3 break-all" lang="id" >
+    Ini adalah contoh teks panjang menggulingkan yang akan dipenggal jika fitur hyphenation diaktifkan secara benar. 
+    Jika Anda melihat tanda hubung (-) di akhir baris saat kata terpotong, berarti berfungsi!
+  </p>
 
-  <table style="width: 600px; table-layout: fixed; border-collapse: collapse;" border="1">
+  <!-- <table style="width: 600px; table-layout: fixed; border-collapse: collapse;" border="1">
     <colgroup>
       <col style="width: 200px;">
       <col style="width: 300px;">
@@ -30,8 +36,20 @@
     <button type="submit">sada</button>
   </form>
 
-  <script src="test.js"></script>
+  <script src="test.js"></script> -->
   
-  
+  <script>
+    Hyphenopoly.config({
+        require: {
+            "id": "auto" // Bahasa Indonesia
+        },
+        setup: {
+            selectors: {
+                ".hypens-auto": {} // Gunakan untuk elemen dengan class ini
+            }
+        }
+    });
+</script>
+
 </body>
 </html>

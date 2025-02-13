@@ -1,21 +1,24 @@
-export const updatePagination = (editorElement: HTMLElement) =>{
-    const content = editorElement;
-    const lines = content.children;
-    let height = 0;
-    const pageHeight = 297 * 3.78; // Konversi mm ke px (1 mm ≈ 3.78 px)
-  
-    document.querySelectorAll(".page-break").forEach((pb) => pb.remove());
-  
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i] as HTMLElement;
-      height += line.offsetHeight;
-  
-      if (height > pageHeight) {
-        const pageBreak = document.createElement("div");
-        pageBreak.className = "page-break";
-        content.insertBefore(pageBreak, line);
-        height = line.offsetHeight; 
+export function paginate(editor: any) {
+  const proseMirror = document.querySelector(".ProseMirror");
+  if (!proseMirror) return;
+
+  const blocks = Array.from(proseMirror.children); // Semua elemen di editor
+  const pageHeight = 800; // Misalnya batas tiap halaman 800px
+  let currentHeight = 0;
+  let lastBreak: any = null;
+
+  blocks.forEach((block) => {
+    const blockHeight = block.getBoundingClientRect().height;
+    currentHeight += blockHeight;
+
+    // Jika tinggi halaman melebihi batas, cari titik potong
+    if (currentHeight > pageHeight) {
+      if (lastBreak) {
+        lastBreak.classList.add("page-break");
+        currentHeight = blockHeight; // Reset tinggi halaman baru
       }
+    } else {
+      lastBreak = block; // Simpan elemen terakhir sebelum batas
     }
-  }
-  
+  });
+}
